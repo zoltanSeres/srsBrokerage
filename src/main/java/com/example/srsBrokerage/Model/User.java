@@ -1,4 +1,4 @@
-package Model;
+package com.example.srsBrokerage.Model;
 
 import jakarta.persistence.*;
 
