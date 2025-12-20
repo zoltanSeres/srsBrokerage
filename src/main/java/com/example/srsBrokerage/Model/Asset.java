@@ -95,12 +95,12 @@ public class Asset {
     @Override
     public String toString() {
         return "Asset{" +
-                "id=" + id +
-                ", assetSymbol='" + assetSymbol + '\'' +
-                ", assetName='" + assetName + '\'' +
-                ", assetCurrency='" + assetCurrency + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                "Asset ID =" + id +
+                ", Asset Symbol ='" + assetSymbol + '\'' +
+                ", Asset Name ='" + assetName + '\'' +
+                ", Asset Currency ='" + assetCurrency + '\'' +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
                 '}';
     }
 }

@@ -29,7 +29,7 @@ public class Trade {
     @PositiveOrZero
     private BigDecimal quantityTraded;
 
-    @Column(name = "price", nullable = false, precision = 19, scale = 4)
+    @Column(name = "price", nullable = false, precision = 19, scale = 6)
     @ColumnDefault("0.0000")
     @PositiveOrZero
     private BigDecimal tradePrice;
@@ -147,16 +147,16 @@ public class Trade {
     @Override
     public String toString() {
         return "Trade{" +
-                "id=" + id +
-                ", accountId=" + accountId +
-                ", assetId=" + assetId +
-                ", quantityTraded=" + quantityTraded +
-                ", tradePrice=" + tradePrice +
-                ", tradeSide='" + tradeSide + '\'' +
-                ", tradingFee=" + tradingFee +
-                ", executedAt=" + executedAt +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                "Trade ID =" + id +
+                ", Account ID =" + accountId +
+                ", Asset ID =" + assetId +
+                ", Quantity Traded =" + quantityTraded +
+                ", Trade Price =" + tradePrice +
+                ", Trade Side ='" + tradeSide + '\'' +
+                ", Trading Fee =" + tradingFee +
+                ", Executed At =" + executedAt +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
                 '}';
     }
 }

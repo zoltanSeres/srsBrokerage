@@ -113,13 +113,13 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", isActive=" + isActive +
+                "User ID =" + id +
+                ", First Name ='" + firstName + '\'' +
+                ", Last Name ='" + lastName + '\'' +
+                ", Email ='" + email + '\'' +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
+                ", Is Active =" + isActive +
                 '}';
     }
 }

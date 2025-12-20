@@ -16,8 +16,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
     @Column(name = "type", nullable = false, length = 50)
@@ -30,7 +30,7 @@ public class Transaction {
     @Column(name = "currency", nullable = false, length = 3)
     private String transactionCurrency;
 
-    @Column(name = "description", length = 254)
+    @Column(name = "description")
     private String transactionDescription;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -45,7 +45,6 @@ public class Transaction {
     public Transaction() {}
     public Transaction(
             Long id,
-            Account account,
             String transactionType,
             BigDecimal transactionAmount,
             String transactionCurrency,
@@ -54,7 +53,6 @@ public class Transaction {
             LocalDateTime updatedAt
     ) {
         this.id = id;
-        this.account = account;
         this.transactionType = transactionType;
         this.transactionAmount = transactionAmount;
         this.transactionCurrency = transactionCurrency;
@@ -119,14 +117,14 @@ public class Transaction {
     @Override
     public String toString() {
         return "Transaction{" +
-                "id=" + id +
-                ", account=" + account +
-                ", transactionType='" + transactionType + '\'' +
-                ", transactionAmount=" + transactionAmount +
-                ", transactionCurrency='" + transactionCurrency + '\'' +
-                ", transactionDescription='" + transactionDescription + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                "Transaction ID =" + id +
+                ", User Account =" + account +
+                ", Transaction Type ='" + transactionType + '\'' +
+                ", Transaction Amount =" + transactionAmount +
+                ", Transaction Currency ='" + transactionCurrency + '\'' +
+                ", Transaction Description ='" + transactionDescription + '\'' +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
                 '}';
     }
 }

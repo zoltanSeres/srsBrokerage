@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "account", schema = "accounts")
@@ -26,10 +27,30 @@ public class Account {
     @Column(name = "cash_balance", nullable = false, precision = 19, scale = 4)
     @ColumnDefault("0.0000")
     @PositiveOrZero
-    private BigDecimal cashBalance;
+    private BigDecimal accountBalance;
 
     @Column(name = "currency", nullable = false, length = 3)
-    private String currency;
+    private String accountCurrency;
+
+    @OneToMany(mappedBy = "account")
+    private List<Transaction> transactions;
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        transaction.setAccount(this);
+    }
+
+    @OneToMany(mappedBy = "account")
+    private List<Position> positions;
+
+    public void addPosition(Position position) {
+        positions.add(position);
+        position.setAccount(this);
+    }
+    public void removePosition(Position position){
+        positions.remove(position);
+        position.setAccount(null);
+    }
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -45,16 +66,16 @@ public class Account {
             Long id,
             Long userId,
             String accountType,
-            BigDecimal cashBalance,
-            String currency,
+            BigDecimal accountBalance,
+            String accountCurrency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.id = id;
         this.userId = userId;
         this.accountType = accountType;
-        this.cashBalance = cashBalance;
-        this.currency = currency;
+        this.accountBalance = accountBalance;
+        this.accountCurrency = accountCurrency;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -68,11 +89,17 @@ public class Account {
     public String getAccountType() {
         return accountType;
     }
-    public BigDecimal getCashBalance() {
-        return cashBalance;
+    public BigDecimal getAccountBalance() {
+        return accountBalance;
     }
-    public String getCurrency() {
-        return currency;
+    public String getAccountCurrency() {
+        return accountCurrency;
+    }
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+    public List<Position> getPositions() {
+        return positions;
     }
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -89,11 +116,11 @@ public class Account {
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
-    public void setCashBalance(BigDecimal cashBalance) {
-        this.cashBalance = cashBalance;
+    public void setAccountBalance(BigDecimal cashBalance) {
+        this.accountBalance = accountBalance;
     }
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setCurrency(String accountCurrency) {
+        this.accountCurrency = accountCurrency;
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -106,13 +133,15 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", accountType='" + accountType + '\'' +
-                ", cashBalance=" + cashBalance +
-                ", currency='" + currency + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                "Account ID =" + id +
+                ", User ID =" + userId +
+                ", Account Type ='" + accountType + '\'' +
+                ", Account Balance =" + accountBalance +
+                ", Account Currency ='" + accountCurrency + '\'' +
+                ", Transactions =" + transactions +
+                ", Positions =" + positions +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
                 '}';
     }
 }

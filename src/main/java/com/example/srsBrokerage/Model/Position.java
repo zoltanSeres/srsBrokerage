@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -18,8 +19,8 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
     @ManyToOne
@@ -31,7 +32,7 @@ public class Position {
     @PositiveOrZero
     private BigDecimal heldQuantity;
 
-    @Column(name = "average_price", nullable = false, precision = 19, scale = 4)
+    @Column(name = "average_price", nullable = false, precision = 19, scale = 8)
     @ColumnDefault("0.0000")
     @PositiveOrZero
     private BigDecimal averagePrice;
@@ -48,16 +49,12 @@ public class Position {
     public Position() {}
     public Position(
             Long id,
-            Account account,
-            Asset asset,
             BigDecimal heldQuantity,
             BigDecimal averagePrice,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.id = id;
-        this.account = account;
-        this.asset = asset;
         this.heldQuantity = heldQuantity;
         this.averagePrice = averagePrice;
         this.createdAt = createdAt;
@@ -115,13 +112,13 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-                "id=" + id +
-                ", account=" + account +
-                ", asset=" + asset +
-                ", heldQuantity=" + heldQuantity +
-                ", averagePrice=" + averagePrice +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                "Position ID =" + id +
+                ", Account =" + account +
+                ", Asset =" + asset +
+                ", Held Quantity =" + heldQuantity +
+                ", Average Price =" + averagePrice +
+                ", Created At =" + createdAt +
+                ", Updated At =" + updatedAt +
                 '}';
     }
 }
