@@ -32,7 +32,7 @@ public class Account {
     @Column(name = "currency", nullable = false, length = 3)
     private String accountCurrency;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
     private List<Transaction> transactions;
 
     public void addTransaction(Transaction transaction) {
@@ -40,7 +40,7 @@ public class Account {
         transaction.setAccount(this);
     }
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
     private List<Position> positions;
 
     public void addPosition(Position position) {
