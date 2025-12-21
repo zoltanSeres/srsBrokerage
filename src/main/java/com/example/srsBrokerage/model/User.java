@@ -1,4 +1,4 @@
-package com.example.srsBrokerage.Model;
+package com.example.srsBrokerage.model;
 
 import jakarta.persistence.*;
 
@@ -36,7 +36,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive = false;
 
     public User() {}
     public User(
@@ -57,6 +57,13 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
+    }
+
+    public User(String firstName, String lastName, String email, String passwordHash) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.passwordHash = passwordHash;
     }
 
     public long getId() {
@@ -97,8 +104,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setPassword(String password) {
-        this.passwordHash = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;

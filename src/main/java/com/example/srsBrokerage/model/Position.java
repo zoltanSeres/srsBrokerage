@@ -1,11 +1,10 @@
-package com.example.srsBrokerage.Model;
+package com.example.srsBrokerage.model;
 
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;

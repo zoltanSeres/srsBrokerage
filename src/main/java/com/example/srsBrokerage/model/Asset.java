@@ -1,10 +1,9 @@
-package com.example.srsBrokerage.Model;
+package com.example.srsBrokerage.model;
 
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

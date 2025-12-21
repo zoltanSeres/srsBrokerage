@@ -1,6 +1,6 @@
-package com.example.srsBrokerage.Repository;
+package com.example.srsBrokerage.repository;
 
-import com.example.srsBrokerage.Model.Transaction;
+import com.example.srsBrokerage.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
