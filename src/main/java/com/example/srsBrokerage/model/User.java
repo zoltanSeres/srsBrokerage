@@ -129,4 +129,13 @@ public class User {
                 ", Is Active =" + isActive +
                 '}';
     }
+    /* implement in User:
+
+
+private void activate() {
+    if (!user.isActive()) {
+       throw new IllegalStateException("User is already active.");
+       }
+*/
+
 }
