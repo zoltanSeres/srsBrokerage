@@ -59,7 +59,12 @@ public class User {
         this.isActive = isActive;
     }
 
-    public User(String firstName, String lastName, String email, String passwordHash) {
+    public User(
+            String firstName,
+            String lastName,
+            String email,
+            String passwordHash
+    ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

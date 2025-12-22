@@ -16,13 +16,6 @@ public class UserService {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-    public void setUserRepository(UserRepository userRepository) {
-
-        this.userRepository = userRepository;
-    }
 
     public UserResponse createUser(CreateUserRequest createUserRequest) {
 
@@ -38,14 +31,7 @@ public class UserService {
             throw new IllegalStateException("Email is already used.");
         }
 
-
-        User user = new User(
-                createUserRequest.firstName(),
-                createUserRequest.lastName(),
-                createUserRequest.email(),
-                createUserRequest.password()
-        );
-
+        User user = userMapper.toEntity(createUserRequest);
 
         user.isActive();
 
