@@ -5,6 +5,7 @@ import com.example.srsBrokerage.dto.response.user.UserResponse;
 import com.example.srsBrokerage.mapper.UserMapper;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,5 +38,13 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
+    }
+
+
+    public UserResponse findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->new IllegalArgumentException("User not found"));
+
+        return userMapper.toDto(user);
     }
 }
