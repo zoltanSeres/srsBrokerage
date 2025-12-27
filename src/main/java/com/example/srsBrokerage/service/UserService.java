@@ -8,6 +8,8 @@ import com.example.srsBrokerage.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private UserRepository userRepository;
@@ -46,5 +48,44 @@ public class UserService {
                 .orElseThrow(() ->new IllegalArgumentException("User not found"));
 
         return userMapper.toDto(user);
+    }
+
+
+    public List<UserResponse> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+
+    public void deleteUser(Long id) {
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userRepository.delete(userToDelete);
+    }
+
+
+    public UserResponse updateUser(Long id, CreateUserRequest createUserRequest) {
+        User userToUpdate = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!createUserRequest.firstName().matches("[A-Za-z]+")) {
+            throw new IllegalArgumentException("Invalid characters");
+        }
+        if (!createUserRequest.lastName().matches("[A-Za-z]+")) {
+            throw new IllegalArgumentException("Invalid characters");
+        }
+        if (userRepository.existsByEmail(createUserRequest.email())) {
+            throw new IllegalStateException("Email is already used.");
+        }
+
+        userToUpdate.setFirstName(createUserRequest.firstName());
+        userToUpdate.setLastName(createUserRequest.lastName());
+        userToUpdate.setEmail(createUserRequest.email());
+
+        User updatedUser = userRepository.save(userToUpdate);
+
+        return userMapper.toDto(updatedUser);
     }
 }

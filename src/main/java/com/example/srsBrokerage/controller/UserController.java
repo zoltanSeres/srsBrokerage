@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -31,5 +33,25 @@ public class UserController {
     public ResponseEntity<UserResponse> findUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.findUserById(id);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> findAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody CreateUserRequest createUserRequest
+    ) {
+        UserResponse userResponse = userService.updateUser(id, createUserRequest);
+        return ResponseEntity.ok(userService.updateUser(id, createUserRequest));
     }
 }
