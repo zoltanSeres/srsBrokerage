@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +33,10 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    LocalDateTime timeForTesting = LocalDateTime.now();
+    // timeForTesting is used only for testing
+
+
     @Test
     void createUser_shouldReturnUser_whenValidInput() {
         CreateUserRequest createUserRequest = new CreateUserRequest("John", "Doe", "john@gmail.com", "123456789");
@@ -37,9 +44,6 @@ public class UserServiceTest {
         User userEntity = new User("John", "Doe", "john@gmail.com", "123456789");
         User savedUser = new User("John", "Doe", "john@gmail.com", "123456789");
 
-
-        LocalDateTime timeForTesting = LocalDateTime.now();
-        // timeForTesting is used only for testing
         UserResponse userResponse = new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting);
 
         when(userMapper.toEntity(createUserRequest)).thenReturn(userEntity);
@@ -54,5 +58,104 @@ public class UserServiceTest {
         assertEquals("john@gmail.com", result.email());
 
         verify(userRepository).save(any(User.class));
+    }
+
+
+    @Test
+    void findUserById_shouldReturnUser_whenValidInput() {
+        User user = new User("John", "Doe", "john@gmail.com", "123456789");
+        user.setId(1L); //set ID manually for test
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user))
+                .thenReturn(new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
+
+        UserResponse result = userService.findUserById(1L);
+
+
+        assertEquals("John", result.firstName());
+        assertEquals("Doe", result.lastName());
+        assertEquals("john@gmail.com", result.email());
+
+        verify(userRepository).findById(1L);
+    }
+
+
+    @Test
+    void findAllUsers_shouldReturnUsers_whenValidInput() {
+        List<User> users = new ArrayList<>();
+
+        User userOne = new User("John", "Doe", "john@gmail.com", "123456789");
+        userOne.setId(1L);
+        User userTwo = new User("Jane", "Kent", "jane@gmail.com", "987654321");
+        userTwo.setId(2L);
+        User userThree = new User("Ana", "Mike", "ana@gmail.com", "1020304050");
+        userThree.setId(3L);
+
+        users.add(userOne);
+        users.add(userTwo);
+        users.add(userThree);
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        when(userMapper.toDto(userOne))
+                .thenReturn(new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
+        when(userMapper.toDto(userTwo))
+                .thenReturn(new UserResponse("Jane", "Kent", "jane@gmail.com", timeForTesting, timeForTesting));
+        when(userMapper.toDto(userThree))
+                .thenReturn(new UserResponse("Ana", "Mike", "ana@gmail.com", timeForTesting, timeForTesting));
+
+        List<UserResponse> response = userService.findAllUsers();
+
+        assertEquals(3, response.size());
+        assertEquals("Ana", response.get(2).firstName());
+
+        verify(userRepository).findAll();
+    }
+
+
+    @Test
+    void updateUserById_shouldUpdateUser_whenValidInput() {
+        User user = new User("John", "Doe", "john@gmail.com", "123456789");
+        user.setId(1L);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        CreateUserRequest updateUserRequest = new CreateUserRequest("John", "Miller", "john@gmail.com", "123456789");
+
+        user.setFirstName(updateUserRequest.firstName());
+        user.setLastName(updateUserRequest.lastName());
+        user.setEmail(updateUserRequest.email());
+        user.setPasswordHash(updateUserRequest.password());
+
+        when(userRepository.save(user)).thenReturn(user);
+        when(userMapper.toDto(user))
+                .thenReturn(new UserResponse("John", "Miller", "john@gmail.com", timeForTesting, timeForTesting));
+
+        UserResponse result = userService.updateUser(1L, updateUserRequest);
+
+        assertEquals("John", result.firstName());
+        assertEquals("Miller", result.lastName());
+        assertEquals("john@gmail.com", result.email());
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(user);
+        verify(userMapper).toDto(user);
+
+
+    }
+
+
+    @Test
+    void deleteUserById_shouldDeleteUser_whenValidInput() {
+        User user = new User("John", "Doe", "john@gmail.com", "123456789");
+        user.setId(1L);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+       userService.deleteUser(1L);
+
+       verify(userRepository).findById(1L);
+       verify(userRepository).delete(user);
     }
 }
