@@ -2,10 +2,13 @@ package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.user.CreateUserRequest;
 import com.example.srsBrokerage.dto.response.user.UserResponse;
+import com.example.srsBrokerage.exceptions.UserAlreadyExistsException;
+import com.example.srsBrokerage.exceptions.UserNotFoundException;
 import com.example.srsBrokerage.mapper.UserMapper;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.UserRepository;
 
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -157,5 +160,28 @@ public class UserServiceTest {
 
        verify(userRepository).findById(1L);
        verify(userRepository).delete(user);
+    }
+
+
+    @Test
+    void findUserById_ShouldThrowException_whenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.findUserById(1L));
+    }
+
+
+    @Test
+    void createUser_ShouldThrowException_whenUserExists() {
+        CreateUserRequest createUserRequest = new CreateUserRequest(
+                "John",
+                "Doe",
+                "john@gmail.com",
+                "23456789"
+        );
+
+        when(userRepository.existsByEmail("john@gmail.com")).thenReturn(true);
+
+        assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(createUserRequest));
     }
 }
