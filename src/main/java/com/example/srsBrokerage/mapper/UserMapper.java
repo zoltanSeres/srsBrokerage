@@ -26,12 +26,12 @@ public class UserMapper {
     public UserResponse toDto(User user) {
 
         return new UserResponse(
-
-        user.getFirstName(),
-        user.getLastName(),
-        user.getEmail(),
-        user.getCreatedAt(),
-        user.getUpdatedAt()
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
         );
     }
 
