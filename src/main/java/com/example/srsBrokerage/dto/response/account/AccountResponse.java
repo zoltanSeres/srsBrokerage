@@ -1,7 +1,8 @@
-package com.example.srsBrokerage.dto.response.user;
+package com.example.srsBrokerage.dto.response.account;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Currency;
 
 public record AccountResponse(
 
@@ -9,7 +10,7 @@ public record AccountResponse(
         Long userId,
         BigDecimal accountBalance,
         String accountType,
-        String accountCurrency,
+        Currency accountCurrency,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 

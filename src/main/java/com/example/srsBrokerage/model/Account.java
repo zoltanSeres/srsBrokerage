@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,8 @@ public class Account {
     private BigDecimal accountBalance;
 
     @Column(name = "currency", nullable = false, length = 3)
-    private String accountCurrency;
+    @Enumerated(EnumType.STRING)
+    private Currency accountCurrency;
 
     @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
     private List<Transaction> transactions;
@@ -67,7 +69,7 @@ public class Account {
             Long userId,
             String accountType,
             BigDecimal accountBalance,
-            String accountCurrency,
+            Currency accountCurrency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -92,7 +94,7 @@ public class Account {
     public BigDecimal getAccountBalance() {
         return accountBalance;
     }
-    public String getAccountCurrency() {
+    public Currency getAccountCurrency() {
         return accountCurrency;
     }
     public List<Transaction> getTransactions() {
@@ -119,7 +121,7 @@ public class Account {
     public void setAccountBalance(BigDecimal cashBalance) {
         this.accountBalance = accountBalance;
     }
-    public void setCurrency(String accountCurrency) {
+    public void setCurrency(Currency accountCurrency) {
         this.accountCurrency = accountCurrency;
     }
     public void setCreatedAt(LocalDateTime createdAt) {

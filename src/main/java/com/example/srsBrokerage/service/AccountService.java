@@ -1,8 +1,8 @@
 package com.example.srsBrokerage.service;
 
 
-import com.example.srsBrokerage.dto.request.user.CreateAccountRequest;
-import com.example.srsBrokerage.dto.response.user.AccountResponse;
+import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
+import com.example.srsBrokerage.dto.response.account.AccountResponse;
 import com.example.srsBrokerage.exceptions.NegativeAccountBalanceException;
 import com.example.srsBrokerage.mapper.AccountMapper;
 import com.example.srsBrokerage.model.Account;

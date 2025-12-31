@@ -1,22 +1,21 @@
-package com.example.srsBrokerage.dto.request.user;
+package com.example.srsBrokerage.dto.request.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 
 public record CreateAccountRequest(
 
         @NotBlank
         String accountType,
 
-        @NotBlank
         @NotNull
         @Positive
         BigDecimal accountBalance,
-        @NotBlank
-        String accountCurrency
+        @NotNull
+        Currency accountCurrency
 
 ) {}
