@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.model;
 
+import com.example.srsBrokerage.Enum.AccountType;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.PositiveOrZero;
@@ -23,7 +24,8 @@ public class Account {
     private Long userId;
 
     @Column(name = "account_type", nullable = false, length = 50)
-    private String accountType;
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
 
     @Column(name = "cash_balance", nullable = false, precision = 19, scale = 4)
     @ColumnDefault("0.0000")
@@ -67,7 +69,7 @@ public class Account {
     public Account(
             Long id,
             Long userId,
-            String accountType,
+            AccountType accountType,
             BigDecimal accountBalance,
             Currency accountCurrency,
             LocalDateTime createdAt,
@@ -88,7 +90,7 @@ public class Account {
     public Long getUserId() {
         return userId;
     }
-    public String getAccountType() {
+    public AccountType getAccountType() {
         return accountType;
     }
     public BigDecimal getAccountBalance() {
@@ -115,7 +117,7 @@ public class Account {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public void setAccountType(String accountType) {
+    public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
     public void setAccountBalance(BigDecimal cashBalance) {

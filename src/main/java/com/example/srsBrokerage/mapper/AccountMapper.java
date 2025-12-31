@@ -14,6 +14,7 @@ public class AccountMapper {
     public Account toEntity(CreateAccountRequest createAccountRequest) {
         Account account = new Account();
 
+        account.setUserId(createAccountRequest.userId());
         account.setAccountType(createAccountRequest.accountType());
         account.setAccountBalance(createAccountRequest.accountBalance());
         account.setCurrency(createAccountRequest.accountCurrency());
