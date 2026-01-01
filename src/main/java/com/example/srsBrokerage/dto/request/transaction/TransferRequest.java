@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-public record DepositRequest(
+public record TransferRequest(
         @NotNull
-        Long accountId,
+        Long fromAccountId,
+        @NotNull
+        Long toAccountId,
+        @NotNull
         @Positive
-        @NotNull
         BigDecimal transactionAmount,
         String transactionDescription
 ) {
