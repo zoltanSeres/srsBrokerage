@@ -3,7 +3,7 @@ package com.example.srsBrokerage.service;
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
 import com.example.srsBrokerage.exceptions.AccountTypeAlreadyExistsException;
-import com.example.srsBrokerage.exceptions.NegativeAccountBalanceException;
+import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
 import com.example.srsBrokerage.exceptions.UserNotFoundException;
 import com.example.srsBrokerage.mapper.AccountMapper;
 import com.example.srsBrokerage.model.Account;
@@ -42,7 +42,7 @@ public class AccountService {
         }
 
         if (createAccountRequest.accountBalance().compareTo(BigDecimal.ZERO) < 0) {
-            throw new NegativeAccountBalanceException("Balance cannot be negative.");
+            throw new InvalidDepositAmountException("Deposit amount cannot be negative.");
         }
 
         Account account = accountMapper.toEntity(createAccountRequest);
