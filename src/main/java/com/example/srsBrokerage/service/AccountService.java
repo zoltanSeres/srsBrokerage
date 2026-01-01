@@ -14,6 +14,8 @@ import com.example.srsBrokerage.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -58,5 +60,14 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + id + " does not exist."));
 
         return accountMapper.toDto(account);
+    }
+
+
+    public List<AccountResponse> findAllAccounts() {
+        return accountRepository.findAll()
+                .stream()
+                .map(accountMapper::toDto)
+                .toList();
+
     }
 }

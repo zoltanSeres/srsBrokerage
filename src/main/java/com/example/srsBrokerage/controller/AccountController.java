@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -30,6 +32,12 @@ public class AccountController {
     public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
         AccountResponse accountResponse = accountService.findAccountById(id);
         return ResponseEntity.ok(accountResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AccountResponse>> findAllAccount() {
+        List<AccountResponse> accountResponses = accountService.findAllAccounts();
+        return ResponseEntity.ok(accountResponses);
     }
 
 }
