@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.model;
 
-import com.example.srsBrokerage.Enum.AccountType;
+import com.example.srsBrokerage.enums.AccountType;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.PositiveOrZero;

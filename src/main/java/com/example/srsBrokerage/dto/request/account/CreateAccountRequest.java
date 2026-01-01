@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.dto.request.account;
 
-import com.example.srsBrokerage.Enum.AccountType;
+import com.example.srsBrokerage.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

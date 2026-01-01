@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.model;
 
+import com.example.srsBrokerage.enums.TransactionType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,8 @@ public class Transaction {
     private Account account;
 
     @Column(name = "type", nullable = false, length = 50)
-    private String transactionType;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
     @Column(name = "amount", nullable = false, precision = 19, scale = 4)
     @ColumnDefault("0.0000")
@@ -45,7 +47,7 @@ public class Transaction {
     public Transaction() {}
     public Transaction(
             Long id,
-            String transactionType,
+            TransactionType transactionType,
             BigDecimal transactionAmount,
             String transactionCurrency,
             String transactionDescription,
@@ -68,7 +70,7 @@ public class Transaction {
     public Account getAccount() {
         return account;
     }
-    public String getTransactionType() {
+    public TransactionType getTransactionType() {
         return transactionType;
     }
     public BigDecimal getTransactionAmount() {
@@ -94,7 +96,7 @@ public class Transaction {
     public void setAccount(Account account) {
         this.account = account;
     }
-    public void setTransactionType(String transactionType) {
+    public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }
     public void setTransactionAmount(BigDecimal transactionAmount) {

@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.dto.response.account;
 
-import com.example.srsBrokerage.Enum.AccountType;
+import com.example.srsBrokerage.enums.AccountType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
