@@ -2,10 +2,7 @@ package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
-import com.example.srsBrokerage.exceptions.AccountNotFoundException;
-import com.example.srsBrokerage.exceptions.AccountTypeAlreadyExistsException;
-import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
-import com.example.srsBrokerage.exceptions.UserNotFoundException;
+import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.AccountMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.User;
@@ -68,6 +65,19 @@ public class AccountService {
                 .stream()
                 .map(accountMapper::toDto)
                 .toList();
+    }
 
+
+    public void deleteAccount(Long id) {
+        Account accountToDelete = accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account with ID " + id + " does not exist."));
+
+        if (accountToDelete.getAccountBalance().compareTo(BigDecimal.ZERO) != 0) {
+            throw new AccountCannotBeClosedException("Account cannot be closed. Balance must be " +
+                    accountToDelete.getAccountCurrency() + " 0.00. " +
+                    "Your current balance is " + accountToDelete.getAccountBalance() + ".");
+        }
+
+        accountRepository.delete(accountToDelete);
     }
 }
