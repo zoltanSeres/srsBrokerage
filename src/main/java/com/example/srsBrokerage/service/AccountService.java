@@ -2,6 +2,7 @@ package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
+import com.example.srsBrokerage.exceptions.AccountNotFoundException;
 import com.example.srsBrokerage.exceptions.AccountTypeAlreadyExistsException;
 import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
 import com.example.srsBrokerage.exceptions.UserNotFoundException;
@@ -49,5 +50,13 @@ public class AccountService {
         Account savedAccount = accountRepository.save(account);
 
         return accountMapper.toDto(savedAccount);
+    }
+
+
+    public AccountResponse findAccountById(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account with ID " + id + " does not exist."));
+
+        return accountMapper.toDto(account);
     }
 }

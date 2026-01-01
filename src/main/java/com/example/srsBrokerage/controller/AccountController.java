@@ -3,14 +3,12 @@ package com.example.srsBrokerage.controller;
 
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
+import com.example.srsBrokerage.exceptions.AccountNotFoundException;
 import com.example.srsBrokerage.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/accounts")
@@ -28,6 +26,10 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponse);
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
+        AccountResponse accountResponse = accountService.findAccountById(id);
+        return ResponseEntity.ok(accountResponse);
+    }
 
 }
