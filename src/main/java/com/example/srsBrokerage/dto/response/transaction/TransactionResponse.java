@@ -4,13 +4,13 @@ import com.example.srsBrokerage.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record TransactionResponse(
         Long transactionId,
         TransactionType transactionType,
-        Long accountId,
-        BigDecimal transactionAmount,
         String transactionDescription,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<TransactionEntryResponse> transactionEntryResponse
 ) {
 }

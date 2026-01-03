@@ -72,6 +72,10 @@ public class Transaction {
         return updatedAt;
     }
 
+    public List<TransactionEntry> transactionEntries() {
+        return transactionEntries;
+    }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -81,12 +85,6 @@ public class Transaction {
     }
     public void setTransactionDescription(String transactionDescription) {
         this.transactionDescription = transactionDescription;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
 

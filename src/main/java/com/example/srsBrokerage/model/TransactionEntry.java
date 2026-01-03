@@ -99,10 +99,6 @@ public class TransactionEntry {
         this.transactionCurrency = transactionCurrency;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
 
     @Override
     public String toString() {
