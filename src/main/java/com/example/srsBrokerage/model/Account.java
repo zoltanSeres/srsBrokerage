@@ -37,11 +37,11 @@ public class Account {
     private Currency accountCurrency;
 
     @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
-    private List<Transaction> transactions;
+    private List<TransactionEntry> transactionEntries;
 
-    public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        transaction.setAccount(this);
+    public void addTransactionEntry(TransactionEntry transactionEntry) {
+        transactionEntries.add(transactionEntry);
+        transactionEntry.setAccount(this);
     }
 
     @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
@@ -99,8 +99,8 @@ public class Account {
     public Currency getAccountCurrency() {
         return accountCurrency;
     }
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public List<TransactionEntry> getTransactionEntries() {
+        return transactionEntries;
     }
     public List<Position> getPositions() {
         return positions;
@@ -120,9 +120,7 @@ public class Account {
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
-    public void setAccountBalance(BigDecimal cashBalance) {
-        this.accountBalance = accountBalance;
-    }
+    public void setAccountBalance(BigDecimal accountBalance) {this.accountBalance = accountBalance;}
     public void setCurrency(Currency accountCurrency) {
         this.accountCurrency = accountCurrency;
     }
@@ -142,7 +140,7 @@ public class Account {
                 ", Account Type ='" + accountType + '\'' +
                 ", Account Balance =" + accountBalance +
                 ", Account Currency ='" + accountCurrency + '\'' +
-                ", Transactions =" + transactions +
+                ", Transactions =" + transactionEntries +
                 ", Positions =" + positions +
                 ", Created At =" + createdAt +
                 ", Updated At =" + updatedAt +
