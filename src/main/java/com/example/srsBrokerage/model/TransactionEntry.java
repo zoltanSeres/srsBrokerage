@@ -1,6 +1,7 @@
 package com.example.srsBrokerage.model;
 
 import com.example.srsBrokerage.enums.Currency;
+import com.example.srsBrokerage.enums.EntryType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,6 +33,10 @@ public class TransactionEntry {
     @Column(name = "currency", nullable = false, length = 3)
     private Currency transactionCurrency;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entry-type", nullable = false, length = 10)
+    private EntryType entryType;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -44,6 +49,7 @@ public class TransactionEntry {
             Account account,
             BigDecimal transactionAmount,
             Currency transactionCurrency,
+            EntryType entryType,
             LocalDateTime createdAt
     ) {
         this.id = id;
@@ -51,6 +57,7 @@ public class TransactionEntry {
         this.account = account;
         this.transactionAmount = transactionAmount;
         this.transactionCurrency = transactionCurrency;
+        this.entryType = entryType;
         this.createdAt = createdAt;
     }
 
@@ -75,6 +82,10 @@ public class TransactionEntry {
         return transactionCurrency;
     }
 
+    public EntryType getEntryType() {
+        return entryType;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -97,6 +108,10 @@ public class TransactionEntry {
 
     public void setTransactionCurrency(Currency transactionCurrency) {
         this.transactionCurrency = transactionCurrency;
+    }
+
+    public void setEntryType(EntryType entryType) {
+        this.entryType = entryType;
     }
 
 

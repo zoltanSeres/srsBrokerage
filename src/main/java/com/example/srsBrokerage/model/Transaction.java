@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,7 +33,7 @@ public class Transaction {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
-    private List<TransactionEntry> transactionEntries;
+    private List<TransactionEntry> transactionEntries = new ArrayList<>();
 
     public void addTransactionEntry(TransactionEntry entry) {
         transactionEntries.add(entry);
@@ -72,7 +73,7 @@ public class Transaction {
         return updatedAt;
     }
 
-    public List<TransactionEntry> transactionEntries() {
+    public List<TransactionEntry> getTransactionEntries() {
         return transactionEntries;
     }
 
