@@ -51,9 +51,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidTransferAmountException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTransferAmountException(InvalidTransferAmountException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidTransferException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTransferException(InvalidTransferException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<ErrorResponse> handleInsufficientBalanceException(InsufficientBalanceException exception) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
 }

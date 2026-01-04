@@ -1,14 +1,12 @@
 package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
+import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
 import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
-import com.example.srsBrokerage.exceptions.AccountNotFoundException;
-import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
-import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
-import com.example.srsBrokerage.exceptions.InvalidWithdrawalAmountException;
+import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
@@ -111,4 +109,57 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
 
+    @Override
+    @Transactional
+    public TransactionResponse transfer(TransferRequest transferRequest) {
+        Account fromAccount = accountRepository.findById(transferRequest.fromAccountId())
+                .orElseThrow(() -> new AccountNotFoundException("Source account not found."));
+
+        Account toAccount = accountRepository.findById(transferRequest.toAccountId())
+                .orElseThrow(()-> new AccountNotFoundException("Destination account not found."));
+
+        if (transferRequest.fromAccountId().equals(transferRequest.toAccountId())) {
+            throw new InvalidTransferException("Source and destination account cannot be the same.");
+        }
+
+        if (transferRequest.transactionAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidTransferAmountException("Transfer must be positive.");
+        }
+
+        if (fromAccount.getAccountBalance().compareTo(transferRequest.transactionAmount()) < 0) {
+            throw new InsufficientBalanceException("Insufficient funds in source account.");
+        }
+
+        fromAccount.setAccountBalance(fromAccount.getAccountBalance().subtract(transferRequest.transactionAmount()));
+        toAccount.setAccountBalance(toAccount.getAccountBalance().add(transferRequest.transactionAmount()));
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionType(TransactionType.TRANSFER);
+        transaction.setTransactionDescription("Transfer");
+
+        transactionRepository.save(transaction);
+
+        TransactionEntry transactionEntryDebit = new TransactionEntry();
+
+        transactionEntryDebit.setTransaction(transaction);
+        transactionEntryDebit.setAccount(fromAccount);
+        transactionEntryDebit.setTransactionAmount(transferRequest.transactionAmount());
+        transactionEntryDebit.setTransactionCurrency(transferRequest.currency());
+        transactionEntryDebit.setEntryType(EntryType.DEBIT);
+
+        transactionEntryRepository.save(transactionEntryDebit);
+
+        TransactionEntry transactionEntryCredit = new TransactionEntry();
+
+        transactionEntryCredit.setTransaction(transaction);
+        transactionEntryCredit.setAccount(toAccount);
+        transactionEntryCredit.setTransactionAmount(transferRequest.transactionAmount());
+        transactionEntryCredit.setTransactionCurrency(transferRequest.currency());
+        transactionEntryCredit.setEntryType(EntryType.CREDIT);
+
+        transactionEntryRepository.save(transactionEntryCredit);
+
+        return transactionMapper.toDto(transaction);
+    }
 }
