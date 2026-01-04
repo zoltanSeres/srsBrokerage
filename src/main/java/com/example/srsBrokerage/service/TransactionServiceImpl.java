@@ -14,10 +14,12 @@ import com.example.srsBrokerage.model.TransactionEntry;
 import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.TransactionEntryRepository;
 import com.example.srsBrokerage.repository.TransactionRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -37,6 +39,7 @@ public class TransactionServiceImpl implements TransactionService{
         this.accountRepository = accountRepository;
         this.transactionMapper = transactionMapper;
     }
+
 
     @Override
     @Transactional
@@ -161,5 +164,16 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryRepository.save(transactionEntryCredit);
 
         return transactionMapper.toDto(transaction);
+    }
+
+
+    @Override
+    public List<TransactionResponse> getTransactionsForAccount(Long accountId) {
+        List<Transaction> transactions =
+                transactionRepository.findDistinctByEntries_Account_Id(accountId);
+
+        return transactions.stream()
+                .map(transactionMapper::toDto)
+                .toList();
     }
 }
