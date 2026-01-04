@@ -47,7 +47,7 @@ public class UserServiceTest {
         User userEntity = new User("John", "Doe", "john@gmail.com", "123456789");
         User savedUser = new User("John", "Doe", "john@gmail.com", "123456789");
 
-        UserResponse userResponse = new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting);
+        UserResponse userResponse = new UserResponse(1L,"John", "Doe", "john@gmail.com", timeForTesting, timeForTesting);
 
         when(userMapper.toEntity(createUserRequest)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(savedUser);
@@ -71,7 +71,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toDto(user))
-                .thenReturn(new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
+                .thenReturn(new UserResponse(1L,"John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
 
         UserResponse result = userService.findUserById(1L);
 
@@ -102,11 +102,11 @@ public class UserServiceTest {
         when(userRepository.findAll()).thenReturn(users);
 
         when(userMapper.toDto(userOne))
-                .thenReturn(new UserResponse("John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
+                .thenReturn(new UserResponse(1L,"John", "Doe", "john@gmail.com", timeForTesting, timeForTesting));
         when(userMapper.toDto(userTwo))
-                .thenReturn(new UserResponse("Jane", "Kent", "jane@gmail.com", timeForTesting, timeForTesting));
+                .thenReturn(new UserResponse(1L,"Jane", "Kent", "jane@gmail.com", timeForTesting, timeForTesting));
         when(userMapper.toDto(userThree))
-                .thenReturn(new UserResponse("Ana", "Mike", "ana@gmail.com", timeForTesting, timeForTesting));
+                .thenReturn(new UserResponse(1L,"Ana", "Mike", "ana@gmail.com", timeForTesting, timeForTesting));
 
         List<UserResponse> response = userService.findAllUsers();
 
@@ -133,7 +133,7 @@ public class UserServiceTest {
 
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toDto(user))
-                .thenReturn(new UserResponse("John", "Miller", "john@gmail.com", timeForTesting, timeForTesting));
+                .thenReturn(new UserResponse(1L,"John", "Miller", "john@gmail.com", timeForTesting, timeForTesting));
 
         UserResponse result = userService.updateUser(1L, updateUserRequest);
 

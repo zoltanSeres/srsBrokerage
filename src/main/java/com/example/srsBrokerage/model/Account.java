@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.model;
 
+import com.example.srsBrokerage.enums.AccountCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import jakarta.persistence.*;
 
@@ -10,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.List;
 
 @Entity
@@ -34,7 +34,7 @@ public class Account {
 
     @Column(name = "currency", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private Currency accountCurrency;
+    private AccountCurrency accountCurrency;
 
     @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
     private List<TransactionEntry> transactionEntries;
@@ -71,7 +71,7 @@ public class Account {
             Long userId,
             AccountType accountType,
             BigDecimal accountBalance,
-            Currency accountCurrency,
+            AccountCurrency accountCurrency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -96,7 +96,7 @@ public class Account {
     public BigDecimal getAccountBalance() {
         return accountBalance;
     }
-    public Currency getAccountCurrency() {
+    public AccountCurrency getAccountCurrency() {
         return accountCurrency;
     }
     public List<TransactionEntry> getTransactionEntries() {
@@ -121,7 +121,7 @@ public class Account {
         this.accountType = accountType;
     }
     public void setAccountBalance(BigDecimal accountBalance) {this.accountBalance = accountBalance;}
-    public void setCurrency(Currency accountCurrency) {
+    public void setAccountCurrency(AccountCurrency accountCurrency) {
         this.accountCurrency = accountCurrency;
     }
     public void setCreatedAt(LocalDateTime createdAt) {

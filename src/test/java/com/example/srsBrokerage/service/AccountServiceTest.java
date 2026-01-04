@@ -1,0 +1,98 @@
+package com.example.srsBrokerage.service;
+
+
+import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
+import com.example.srsBrokerage.dto.response.account.AccountResponse;
+import com.example.srsBrokerage.enums.AccountType;
+import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.mapper.AccountMapper;
+import com.example.srsBrokerage.model.Account;
+import com.example.srsBrokerage.model.User;
+import com.example.srsBrokerage.repository.AccountRepository;
+import com.example.srsBrokerage.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@ExtendWith(MockitoExtension.class)
+public class AccountServiceTest {
+
+    @Mock
+    private AccountRepository accountRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private AccountMapper accountMapper;
+
+    @InjectMocks
+    private AccountService accountService;
+
+    LocalDateTime timeForTesting = LocalDateTime.now();
+    //used only for testing
+
+    @Test
+    void createAccount_shouldReturnAccount_whenValidInput() {
+        CreateAccountRequest createAccountRequest = new CreateAccountRequest(
+                1L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD
+        );
+
+        User testUser = new User("John", "Doe", "john@gmail.com", "123456789");
+
+        when(userRepository.findById(1L))
+                .thenReturn(Optional.of(testUser));
+
+        when(accountMapper.toEntity(any(CreateAccountRequest.class)))
+                .thenAnswer(invocationOnMock -> {
+                    CreateAccountRequest request = invocationOnMock.getArgument(0);
+                    return new Account(
+                            null,
+                            null,
+                            request.accountType(),
+                            request.accountBalance(),
+                            request.accountCurrency(),
+                            timeForTesting,
+                            timeForTesting
+                    );
+                });
+
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        when(accountMapper.toDto(any(Account.class)))
+                .thenAnswer(invocationOnMock -> {
+                    Account account = invocationOnMock.getArgument(0);
+                    return new AccountResponse(
+                            null,
+                            null,
+                            account.getAccountBalance(),
+                            account.getAccountType(),
+                            account.getAccountCurrency(),
+                            timeForTesting,
+                            timeForTesting
+                    );
+                });
+
+        AccountResponse result = accountService.createAccount(createAccountRequest);
+
+        assertNotNull(result);
+        assertEquals(AccountType.CHECKING, result.accountType());
+        assertEquals(createAccountRequest.accountBalance(), result.accountBalance());
+        assertEquals(AccountCurrency.USD, result.accountCurrency());
+    }
+}

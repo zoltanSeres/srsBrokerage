@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.enums;
 
-public enum Currency {
+public enum AccountCurrency {
     USD,
     EUR
 }

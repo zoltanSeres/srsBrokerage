@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.dto.request.account;
 
+import com.example.srsBrokerage.enums.AccountCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +14,13 @@ public record CreateAccountRequest(
         @NotNull
         Long userId,
 
-        @NotBlank
+        @NotNull
         AccountType accountType,
 
         @NotNull
         @Positive
         BigDecimal accountBalance,
         @NotNull
-        Currency accountCurrency
+        AccountCurrency accountCurrency
 
 ) {}

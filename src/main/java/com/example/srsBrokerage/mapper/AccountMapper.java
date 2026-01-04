@@ -17,7 +17,7 @@ public class AccountMapper {
         account.setUserId(createAccountRequest.userId());
         account.setAccountType(createAccountRequest.accountType());
         account.setAccountBalance(createAccountRequest.accountBalance());
-        account.setCurrency(createAccountRequest.accountCurrency());
+        account.setAccountCurrency(createAccountRequest.accountCurrency());
 
         return account;
     }
