@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TransactionService {
     TransactionResponse deposit(DepositRequest depositRequest);
-    TransactionResponse withdrawal(WithdrawalRequest withdrawalRequest);
+    TransactionResponse withdraw(WithdrawalRequest withdrawalRequest);
     TransactionResponse transfer(TransferRequest transferRequest);
     List<TransactionResponse> getTransactionsForAccount(Long AccountId);
 }

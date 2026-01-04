@@ -1,11 +1,14 @@
 package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
+import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.exceptions.AccountNotFoundException;
+import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
 import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
+import com.example.srsBrokerage.exceptions.InvalidWithdrawalAmountException;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
@@ -17,7 +20,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -65,6 +67,43 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setTransactionAmount(depositRequest.transactionAmount());
         transactionEntry.setTransactionCurrency(depositRequest.currency());
         transactionEntry.setEntryType(EntryType.CREDIT);
+
+        transactionEntryRepository.save(transactionEntry);
+
+        return transactionMapper.toDto(transaction);
+    }
+
+
+    @Override
+    @Transactional
+    public TransactionResponse withdraw(WithdrawalRequest withdrawalRequest) {
+        Account account = accountRepository.findById(withdrawalRequest.accountId())
+                .orElseThrow(() -> new AccountNotFoundException("Account not found."));
+
+        if (withdrawalRequest.transactionAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidWithdrawalAmountException("Withdrawal must be positive.");
+        }
+
+        if (account.getAccountBalance().compareTo(withdrawalRequest.transactionAmount()) < 0) {
+            throw new InsufficientBalanceException("Insufficient funds.");
+        }
+
+        account.setAccountBalance(account.getAccountBalance().subtract(withdrawalRequest.transactionAmount()));
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionType(TransactionType.WITHDRAWAL);
+        transaction.setTransactionDescription("Withdrawal");
+
+        transactionRepository.save(transaction);
+
+        TransactionEntry transactionEntry = new TransactionEntry();
+
+        transactionEntry.setTransaction(transaction);
+        transactionEntry.setAccount(account);
+        transactionEntry.setTransactionAmount(withdrawalRequest.transactionAmount());
+        transactionEntry.setTransactionCurrency(withdrawalRequest.currency());
+        transactionEntry.setEntryType(EntryType.DEBIT);
 
         transactionEntryRepository.save(transactionEntry);
 
