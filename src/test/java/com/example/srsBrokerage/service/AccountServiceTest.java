@@ -5,6 +5,7 @@ import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
 import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.exceptions.AccountCannotBeClosedException;
 import com.example.srsBrokerage.mapper.AccountMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.User;
@@ -44,6 +45,7 @@ public class AccountServiceTest {
 
     LocalDateTime timeForTesting = LocalDateTime.now();
     //used only for testing
+
 
     @Test
     void createAccount_shouldReturnAccount_whenValidInput() {
@@ -215,5 +217,48 @@ public class AccountServiceTest {
 
         verify(accountRepository).findAll();
         verify(accountMapper, times(3)).toDto(any(Account.class));
+    }
+
+
+    @Test
+    void deleteAccountById_shouldDeleteAccount_whenValidInput() {
+
+        Account account = new Account(
+                2L,
+                3L,
+                AccountType.CHECKING,
+                BigDecimal.ZERO,
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(2L)).thenReturn(Optional.of(account));
+
+        accountService.deleteAccount(2L);
+
+        verify(accountRepository).findById(2L);
+        verify(accountRepository).delete(account);
+    }
+
+
+    @Test
+    void deleteAccountById_shouldThrowException_whenBalanceNotZero() {
+        Account account = new Account(
+                2L,
+                3L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(2L)).thenReturn(Optional.of(account));
+
+        assertThrows(AccountCannotBeClosedException.class, () -> accountService.deleteAccount(2L));
+
+        verify(accountRepository).findById(2L);
+        verify(accountRepository, never()).deleteById(anyLong());
     }
 }
