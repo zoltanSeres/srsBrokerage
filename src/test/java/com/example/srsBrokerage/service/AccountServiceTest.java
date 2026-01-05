@@ -80,8 +80,8 @@ public class AccountServiceTest {
                     return new AccountResponse(
                             null,
                             null,
-                            account.getAccountBalance(),
                             account.getAccountType(),
+                            account.getAccountBalance(),
                             account.getAccountCurrency(),
                             timeForTesting,
                             timeForTesting
@@ -94,5 +94,46 @@ public class AccountServiceTest {
         assertEquals(AccountType.CHECKING, result.accountType());
         assertEquals(createAccountRequest.accountBalance(), result.accountBalance());
         assertEquals(AccountCurrency.USD, result.accountCurrency());
+
+        verify(userRepository).findById(1L);
+        verify(accountRepository).save(any(Account.class));
+    }
+
+
+    @Test
+    void findAccountById_ShouldReturnAccount_whenValidInput() {
+        Account account = new Account(
+                1L,
+                2L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        when(accountMapper.toDto(account))
+                .thenReturn(new AccountResponse(
+                        1L,
+                        2L,
+                        AccountType.CHECKING,
+                        new BigDecimal("1000.00"),
+                        AccountCurrency.USD,
+                        timeForTesting,
+                        timeForTesting)
+                );
+
+        AccountResponse result = accountService.findAccountById(1L);
+
+        assertNotNull(result);
+        assertEquals(AccountType.CHECKING, result.accountType());
+        assertEquals(new BigDecimal("1000.00"), result.accountBalance());
+        assertEquals(AccountCurrency.USD, result.accountCurrency());
+
+        verify(accountRepository).findById(1L);
+        verify(accountMapper).toDto(account);
     }
 }

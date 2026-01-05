@@ -10,8 +10,8 @@ public record AccountResponse(
 
         Long id,
         Long userId,
-        BigDecimal accountBalance,
         AccountType accountType,
+        BigDecimal accountBalance,
         AccountCurrency accountCurrency,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

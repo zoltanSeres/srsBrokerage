@@ -28,8 +28,8 @@ public class AccountMapper {
         return new AccountResponse(
                 account.getId(),
                 account.getUserId(),
-                account.getAccountBalance(),
                 account.getAccountType(),
+                account.getAccountBalance(),
                 account.getAccountCurrency(),
                 account.getCreatedAt(),
                 account.getUpdatedAt()
