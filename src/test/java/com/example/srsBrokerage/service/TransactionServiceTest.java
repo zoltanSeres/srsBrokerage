@@ -10,6 +10,8 @@ import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.exceptions.AccountNotFoundException;
+import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
+import com.example.srsBrokerage.exceptions.InvalidWithdrawalAmountException;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
@@ -56,7 +58,6 @@ public class TransactionServiceTest {
 
     @Test
     void deposit_shouldCreateTransaction_whenValidInput() {
-
         Account account = new Account(
                 1L,
                 10L,
@@ -250,7 +251,8 @@ public class TransactionServiceTest {
                 "Deposit"
         );
 
-        assertThrows(AccountNotFoundException.class, () -> {transactionService.deposit(request);});
+        assertThrows(AccountNotFoundException.class, () -> {
+            transactionService.deposit(request);});
 
         verify(accountRepository, never()).save(any(Account.class));
         verify(transactionRepository,never()).save(any(Transaction.class));
@@ -269,7 +271,8 @@ public class TransactionServiceTest {
                 "Withdraw"
         );
 
-        assertThrows(AccountNotFoundException.class, () -> {transactionService.withdraw(request);});
+        assertThrows(AccountNotFoundException.class, () -> {
+            transactionService.withdraw(request);});
 
         verify(accountRepository, never()).save(any(Account.class));
         verify(transactionRepository, never()).save(any(Transaction.class));
@@ -289,7 +292,8 @@ public class TransactionServiceTest {
                 "Transfer"
         );
 
-        assertThrows(AccountNotFoundException.class, () -> {transactionService.transfer(request);});
+        assertThrows(AccountNotFoundException.class, () -> {
+            transactionService.transfer(request);});
 
         verify(accountRepository, never()).save(any(Account.class));
         verify(transactionRepository, never()).save(any(Transaction.class));
@@ -321,9 +325,91 @@ public class TransactionServiceTest {
                 "Transfer"
         );
 
-        assertThrows(AccountNotFoundException.class, () -> {transactionService.transfer(request);});
+        assertThrows(AccountNotFoundException.class, () -> {
+            transactionService.transfer(request);});
 
         verify(accountRepository,never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void deposit_shouldThrowException_whenAmountZeroOrNegative() {
+        Account account = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        DepositRequest zeroAmountRequest = new DepositRequest(
+                1L,
+                new BigDecimal("0.00"),
+                AccountCurrency.USD,
+                "Deposit"
+        );
+
+        DepositRequest negativeAmountRequest = new DepositRequest(
+                1L,
+                new BigDecimal("-100.00"),
+                AccountCurrency.USD,
+                "Deposit"
+        );
+
+        assertThrows(InvalidDepositAmountException.class, () -> {
+            transactionService.deposit(zeroAmountRequest);});
+
+        assertThrows(InvalidDepositAmountException.class, () -> {
+            transactionService.deposit(negativeAmountRequest);});
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void withdraw_shouldThrowException_whenAmountZeroOrNegative() {
+        Account account = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        WithdrawalRequest zeroAmountRequest = new WithdrawalRequest(
+                1L,
+                new BigDecimal("0.00"),
+                AccountCurrency.USD,
+                "Withdraw"
+        );
+
+        WithdrawalRequest negativeAmountRequest = new WithdrawalRequest(
+                1L,
+                new BigDecimal("-200.00"),
+                AccountCurrency.USD,
+                "Withdraw"
+        );
+
+        assertThrows(InvalidWithdrawalAmountException.class, () -> {
+            transactionService.withdraw(zeroAmountRequest);
+        });
+        assertThrows(InvalidWithdrawalAmountException.class, () -> {
+            transactionService.withdraw(negativeAmountRequest);
+        });
+
+        verify(accountRepository, never()).save(any(Account.class));
         verify(transactionRepository, never()).save(any(Transaction.class));
     }
 
