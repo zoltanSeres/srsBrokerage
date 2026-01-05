@@ -1,6 +1,8 @@
 package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
+import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
+import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionEntryResponse;
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
 import com.example.srsBrokerage.enums.AccountCurrency;
@@ -10,7 +12,6 @@ import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
-import com.example.srsBrokerage.model.TransactionEntry;
 import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.TransactionEntryRepository;
 import com.example.srsBrokerage.repository.TransactionRepository;
@@ -102,8 +103,136 @@ public class TransactionServiceTest {
         verify(accountRepository).findById(1L);
         verify(accountRepository).save(account);
         verify(transactionRepository).save(any(Transaction.class));
-
     }
 
+
+    @Test
+    void withdraw_shouldCreateTransaction_whenValidInput() {
+        Account account = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        WithdrawalRequest request = new WithdrawalRequest(
+                1L,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                "Withdraw"
+        );
+
+        when(transactionRepository.save(any(Transaction.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        TransactionEntryResponse entryResponse = new TransactionEntryResponse(
+                1L,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                EntryType.DEBIT
+        );
+
+        TransactionResponse response = new TransactionResponse(
+                1L,
+                TransactionType.WITHDRAWAL,
+                "Withdraw",
+                timeForTesting,
+                List.of(entryResponse)
+        );
+
+        when(transactionMapper.toDto(any(Transaction.class)))
+                .thenReturn(response);
+
+        TransactionResponse result = transactionService.withdraw(request);
+
+        assertEquals(new BigDecimal("800.00"), account.getAccountBalance());
+
+        verify(accountRepository).findById(1L);
+        verify(accountRepository).save(account);
+        verify(transactionRepository).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void transfer_shouldCreateTransaction_whenValidInput() {
+        Account fromAccount = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        Account toAccount = new Account(
+                2L,
+                8L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(fromAccount));
+
+        when(accountRepository.findById(2L))
+                .thenReturn(Optional.of(toAccount));
+
+        TransferRequest request = new TransferRequest(
+                1L,
+                2L,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                "Transfer"
+        );
+
+        when(transactionRepository.save(any(Transaction.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        TransactionEntryResponse debitResponse = new TransactionEntryResponse(
+                1L,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                EntryType.DEBIT
+        );
+
+        TransactionEntryResponse creditResponse = new TransactionEntryResponse(
+                2L,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                EntryType.CREDIT
+        );
+
+        TransactionResponse response = new TransactionResponse(
+                1L,
+                TransactionType.TRANSFER,
+                "Transfer",
+                timeForTesting,
+                List.of(debitResponse, creditResponse)
+        );
+
+        when(transactionMapper.toDto(any(Transaction.class)))
+                .thenReturn(response);
+
+        TransactionResponse result = transactionService.transfer(request);
+
+        assertEquals(new BigDecimal("800.00"), fromAccount.getAccountBalance());
+        assertEquals(new BigDecimal("1700.00"), toAccount.getAccountBalance());
+
+        verify(accountRepository).findById(1L);
+        verify(accountRepository).findById(2L);
+        verify(accountRepository).save(fromAccount);
+        verify(accountRepository).save(toAccount);
+        verify(transactionRepository).save(any(Transaction.class));
+    }
 
 }
