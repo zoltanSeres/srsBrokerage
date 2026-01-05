@@ -9,6 +9,7 @@ import com.example.srsBrokerage.enums.AccountCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
+import com.example.srsBrokerage.exceptions.AccountNotFoundException;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
@@ -16,6 +17,7 @@ import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.TransactionEntryRepository;
 import com.example.srsBrokerage.repository.TransactionRepository;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -233,6 +235,96 @@ public class TransactionServiceTest {
         verify(accountRepository).save(fromAccount);
         verify(accountRepository).save(toAccount);
         verify(transactionRepository).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void deposit_shouldThrowException_whenAccountNotFound() {
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        DepositRequest request = new DepositRequest(
+                1L,
+                new BigDecimal("300.00"),
+                AccountCurrency.USD,
+                "Deposit"
+        );
+
+        assertThrows(AccountNotFoundException.class, () -> {transactionService.deposit(request);});
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository,never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void withdraw_shouldThrowException_whenAccountNotFound() {
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        WithdrawalRequest request = new WithdrawalRequest(
+                1L,
+                new BigDecimal("300.00"),
+                AccountCurrency.USD,
+                "Withdraw"
+        );
+
+        assertThrows(AccountNotFoundException.class, () -> {transactionService.withdraw(request);});
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void transfer_shouldThrowException_whenFromAccountNotFound() {
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        TransferRequest request = new TransferRequest(
+                1L,
+                2L,
+                new BigDecimal("300.00"),
+                AccountCurrency.USD,
+                "Transfer"
+        );
+
+        assertThrows(AccountNotFoundException.class, () -> {transactionService.transfer(request);});
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void transfer_shouldThrowException_whenToAccountNotFound() {
+        Account fromAccount = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(fromAccount));
+        when(accountRepository.findById(2L))
+                .thenReturn(Optional.empty());
+
+        TransferRequest request = new TransferRequest(
+                1L,
+                2L,
+                new BigDecimal("300.00"),
+                AccountCurrency.USD,
+                "Transfer"
+        );
+
+        assertThrows(AccountNotFoundException.class, () -> {transactionService.transfer(request);});
+
+        verify(accountRepository,never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
     }
 
 }

@@ -140,7 +140,7 @@ public class AccountServiceTest {
 
 
     @Test
-    void findAllAccounts_shouldReturnAccounts_whenInputValid() {
+    void findAllAccounts_shouldReturnAccounts_whenValidInput() {
         List<Account> accountList = new ArrayList<>();
 
         Account accountOne = new Account(
