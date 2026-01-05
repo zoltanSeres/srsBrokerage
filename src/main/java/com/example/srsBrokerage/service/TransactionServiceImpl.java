@@ -54,6 +54,8 @@ public class TransactionServiceImpl implements TransactionService{
 
         account.setAccountBalance(account.getAccountBalance().add(depositRequest.transactionAmount()));
 
+        accountRepository.save(account);
+
         Transaction transaction = new Transaction();
 
         transaction.setTransactionType(TransactionType.DEPOSIT);
@@ -90,6 +92,8 @@ public class TransactionServiceImpl implements TransactionService{
         }
 
         account.setAccountBalance(account.getAccountBalance().subtract(withdrawalRequest.transactionAmount()));
+
+        accountRepository.save(account);
 
         Transaction transaction = new Transaction();
 
@@ -135,6 +139,9 @@ public class TransactionServiceImpl implements TransactionService{
 
         fromAccount.setAccountBalance(fromAccount.getAccountBalance().subtract(transferRequest.transactionAmount()));
         toAccount.setAccountBalance(toAccount.getAccountBalance().add(transferRequest.transactionAmount()));
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
 
         Transaction transaction = new Transaction();
 
