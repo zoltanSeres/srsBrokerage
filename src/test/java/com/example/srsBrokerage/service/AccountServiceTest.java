@@ -10,6 +10,7 @@ import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.UserRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,11 +19,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,11 +114,9 @@ public class AccountServiceTest {
                 timeForTesting
         );
 
-        when(accountRepository.findById(1L))
-                .thenReturn(Optional.of(account));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
-        when(accountMapper.toDto(account))
-                .thenReturn(new AccountResponse(
+        when(accountMapper.toDto(account)).thenReturn(new AccountResponse(
                         1L,
                         2L,
                         AccountType.CHECKING,
@@ -135,5 +135,85 @@ public class AccountServiceTest {
 
         verify(accountRepository).findById(1L);
         verify(accountMapper).toDto(account);
+    }
+
+
+    @Test
+    void findAllAccounts_shouldReturnAccounts_whenInputValid() {
+        List<Account> accountList = new ArrayList<>();
+
+        Account accountOne = new Account(
+                1L,
+                2L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        Account accountTwo = new Account(
+                2L,
+                3L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        Account accountThree = new Account(
+                7L,
+                9L,
+                AccountType.CHECKING,
+                new BigDecimal("800.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        accountList.add(accountOne);
+        accountList.add(accountTwo);
+        accountList.add(accountThree);
+
+        when(accountRepository.findAll()).thenReturn(accountList);
+
+        when(accountMapper.toDto(accountOne)).thenReturn(new AccountResponse(
+                1L,
+                2L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        ));
+
+        when(accountMapper.toDto(accountTwo)).thenReturn(new AccountResponse(
+                2L,
+                3L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        ));
+
+        when(accountMapper.toDto(accountThree)).thenReturn(new AccountResponse(
+                7L,
+                9L,
+                AccountType.CHECKING,
+                new BigDecimal("800.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        ));
+
+        List<AccountResponse>accountResponses = accountService.findAllAccounts();
+
+        assertEquals(3, accountResponses.size());
+        assertEquals(new BigDecimal("800.00"), accountResponses.get(2).accountBalance());
+
+        verify(accountRepository).findAll();
+        verify(accountMapper, times(3)).toDto(any(Account.class));
     }
 }

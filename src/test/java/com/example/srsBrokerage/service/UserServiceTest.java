@@ -108,10 +108,10 @@ public class UserServiceTest {
         when(userMapper.toDto(userThree))
                 .thenReturn(new UserResponse(1L,"Ana", "Mike", "ana@gmail.com", timeForTesting, timeForTesting));
 
-        List<UserResponse> response = userService.findAllUsers();
+        List<UserResponse> responses = userService.findAllUsers();
 
-        assertEquals(3, response.size());
-        assertEquals("Ana", response.get(2).firstName());
+        assertEquals(3, responses.size());
+        assertEquals("Ana", responses.get(2).firstName());
 
         verify(userRepository).findAll();
     }
