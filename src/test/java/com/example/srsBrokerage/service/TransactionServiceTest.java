@@ -9,10 +9,7 @@ import com.example.srsBrokerage.enums.AccountCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
-import com.example.srsBrokerage.exceptions.AccountNotFoundException;
-import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
-import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
-import com.example.srsBrokerage.exceptions.InvalidWithdrawalAmountException;
+import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TransactionMapper;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
@@ -491,4 +488,45 @@ public class TransactionServiceTest {
         verify(transactionRepository, never()).save(any(Transaction.class));
     }
 
+
+    @Test
+    void transfer_shouldThrowException_WhenBothAccountsTheSame() {
+        Account fromAccount = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        Account toAccount = new Account(
+                1L,
+                8L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(fromAccount));
+
+        TransferRequest request = new TransferRequest(
+                1L,
+                1L,
+                new BigDecimal("400.00"),
+                AccountCurrency.USD,
+                "Transfer"
+        );
+
+        assertThrows(InvalidTransferException.class, () -> {
+            transactionService.transfer(request);
+        });
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
 }
