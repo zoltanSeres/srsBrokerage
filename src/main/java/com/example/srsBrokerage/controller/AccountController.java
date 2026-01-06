@@ -1,9 +1,7 @@
 package com.example.srsBrokerage.controller;
 
-
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
-import com.example.srsBrokerage.exceptions.AccountNotFoundException;
 import com.example.srsBrokerage.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
