@@ -10,6 +10,7 @@ import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.EntryType;
 import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.exceptions.AccountNotFoundException;
+import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
 import com.example.srsBrokerage.exceptions.InvalidDepositAmountException;
 import com.example.srsBrokerage.exceptions.InvalidWithdrawalAmountException;
 import com.example.srsBrokerage.mapper.TransactionMapper;
@@ -407,6 +408,83 @@ public class TransactionServiceTest {
         });
         assertThrows(InvalidWithdrawalAmountException.class, () -> {
             transactionService.withdraw(negativeAmountRequest);
+        });
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void withdraw_shouldThrowException_whenInsufficientBalance() {
+        Account account = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("200.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        WithdrawalRequest request = new WithdrawalRequest(
+                1L,
+                new BigDecimal("300.00"),
+                AccountCurrency.USD,
+                "Withdraw"
+        );
+
+        assertThrows(InsufficientBalanceException.class, () -> {
+            transactionService.withdraw(request);
+        });
+        assertEquals(new BigDecimal("200.00"), account.getAccountBalance());
+
+        verify(accountRepository, never()).save(any(Account.class));
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+
+    @Test
+    void transfer_ShouldThrowException_whenTransferExceedsFromAccountBalance() {
+        Account fromAccount = new Account(
+                1L,
+                10L,
+                AccountType.CHECKING,
+                new BigDecimal("1000.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        Account toAccount = new Account(
+                2L,
+                8L,
+                AccountType.CHECKING,
+                new BigDecimal("1500.00"),
+                AccountCurrency.USD,
+                timeForTesting,
+                timeForTesting
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(fromAccount));
+
+        when(accountRepository.findById(2L))
+                .thenReturn(Optional.of(toAccount));
+
+        TransferRequest request = new TransferRequest(
+                1L,
+                2L,
+                new BigDecimal("2000.00"),
+                AccountCurrency.USD,
+                "Transfer"
+        );
+
+        assertThrows(InsufficientBalanceException.class, () -> {
+            transactionService.transfer(request);
         });
 
         verify(accountRepository, never()).save(any(Account.class));
