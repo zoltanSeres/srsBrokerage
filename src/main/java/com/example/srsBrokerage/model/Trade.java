@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.model;
 
+import com.example.srsBrokerage.enums.TradeSide;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.PositiveOrZero;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "trade", schema = "trades")
@@ -16,7 +19,7 @@ public class Trade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long tradeId;
 
     @Column(name = "account_id", nullable = false)
     private Long accountId;
@@ -35,7 +38,7 @@ public class Trade {
     private BigDecimal tradePrice;
 
     @Column(name = "side", nullable = false, length = 10)
-    private String tradeSide;
+    private TradeSide tradeSide;
 
     @Column(name = "trading_fee", nullable = false, precision = 19, scale = 4)
     @ColumnDefault("0.0000")
@@ -53,21 +56,24 @@ public class Trade {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL)
+    private List<TradeEntry> tradeEntries = new ArrayList<>();
+
 
     public Trade() {}
     public Trade(
-            Long id,
+            Long tradeId,
             Long accountId,
             Long assetId,
             BigDecimal quantityTraded,
             BigDecimal tradePrice,
-            String tradeSide,
+            TradeSide tradeSide,
             BigDecimal tradingFee,
             LocalDateTime executedAt,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        this.id = id;
+        this.tradeId = tradeId;
         this.accountId = accountId;
         this.assetId = assetId;
         this.quantityTraded = quantityTraded;
@@ -80,8 +86,8 @@ public class Trade {
     }
 
 
-    public Long getId() {
-        return id;
+    public Long getTradeId() {
+        return tradeId;
     }
     public Long getAccountId() {
         return accountId;
@@ -95,7 +101,7 @@ public class Trade {
     public BigDecimal getTradePrice() {
         return tradePrice;
     }
-    public String getTradeSide() {
+    public TradeSide getTradeSide() {
         return tradeSide;
     }
     public BigDecimal getTradingFee() {
@@ -112,8 +118,8 @@ public class Trade {
     }
 
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTradeId(Long id) {
+        this.tradeId = tradeId;
     }
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
@@ -127,7 +133,7 @@ public class Trade {
      public void setTradePrice(BigDecimal tradePrice) {
         this.tradePrice = tradePrice;
      }
-     public void setTradeSide(String tradeSide) {
+     public void setTradeSide(TradeSide tradeSide) {
         this.tradeSide = tradeSide;
      }
      public void setTradingFee(BigDecimal tradingFee) {
@@ -147,7 +153,7 @@ public class Trade {
     @Override
     public String toString() {
         return "Trade{" +
-                "Trade ID =" + id +
+                "Trade ID =" + tradeId +
                 ", Account ID =" + accountId +
                 ", Asset ID =" + assetId +
                 ", Quantity Traded =" + quantityTraded +

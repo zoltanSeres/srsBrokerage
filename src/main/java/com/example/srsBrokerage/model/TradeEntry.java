@@ -21,8 +21,9 @@ public class TradeEntry {
     @Column(name = "account_id", nullable = false)
     private Long accountId;
 
-    @Column(name = "trade_id", nullable = false)
-    private Long tradeId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "trade_id")
+    private Trade trade;
 
     @Column(name = "asset_id")
     private Long assetId;
@@ -47,7 +48,7 @@ public class TradeEntry {
     public TradeEntry(
             Long id,
             Long accountId,
-            Long tradeId,
+            Trade trade,
             Long assetId,
             TradeEntryType tradeEntryType,
             BigDecimal amount,
@@ -56,7 +57,7 @@ public class TradeEntry {
     ) {
         this.id = id;
         this.accountId = accountId;
-        this.tradeId = tradeId;
+        this.trade = trade;
         this.assetId = assetId;
         this.tradeEntryType = tradeEntryType;
         this.amount = amount;
@@ -72,8 +73,8 @@ public class TradeEntry {
         return accountId;
     }
 
-    public Long getTradeId() {
-        return tradeId;
+    public Trade getTrade() {
+        return trade;
     }
 
     public Long getAssetId() {
@@ -104,8 +105,8 @@ public class TradeEntry {
         this.accountId = accountId;
     }
 
-    public  void setTradeId(Long tradeId) {
-        this.tradeId = tradeId;
+    public void setTrade(Trade trade) {
+        this.trade = trade;
     }
 
     public  void setAssetId(Long assetId) {
@@ -134,7 +135,7 @@ public class TradeEntry {
         return "TradeEntry{" +
                 "id=" + id +
                 ", accountId=" + accountId +
-                ", tradeId=" + tradeId +
+                ", trade=" + trade +
                 ", assetId=" + assetId +
                 ", tradeEntryType=" + tradeEntryType +
                 ", amount=" + amount +
