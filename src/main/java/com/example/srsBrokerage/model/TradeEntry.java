@@ -21,12 +21,12 @@ public class TradeEntry {
     @Column(name = "account_id", nullable = false)
     private Long accountId;
 
+    @Column(name = "asset_id")
+    private Long assetId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "trade_id")
     private Trade trade;
-
-    @Column(name = "asset_id")
-    private Long assetId;
 
     @Column(name = "entry_type", nullable = false)
     private TradeEntryType tradeEntryType;

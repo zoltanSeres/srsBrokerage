@@ -69,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setAccount(account);
         transactionEntry.setTransactionAmount(depositRequest.transactionAmount());
         transactionEntry.setTransactionCurrency(depositRequest.currency());
-        transactionEntry.setEntryType(LedgerDirection.CREDIT);
+        transactionEntry.setLedgerDirection(LedgerDirection.CREDIT);
 
         transactionEntryRepository.save(transactionEntry);
 
@@ -108,7 +108,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setAccount(account);
         transactionEntry.setTransactionAmount(withdrawalRequest.transactionAmount());
         transactionEntry.setTransactionCurrency(withdrawalRequest.currency());
-        transactionEntry.setEntryType(LedgerDirection.DEBIT);
+        transactionEntry.setLedgerDirection(LedgerDirection.DEBIT);
 
         transactionEntryRepository.save(transactionEntry);
 
@@ -156,7 +156,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryDebit.setAccount(fromAccount);
         transactionEntryDebit.setTransactionAmount(transferRequest.transactionAmount());
         transactionEntryDebit.setTransactionCurrency(transferRequest.currency());
-        transactionEntryDebit.setEntryType(LedgerDirection.DEBIT);
+        transactionEntryDebit.setLedgerDirection(LedgerDirection.DEBIT);
 
         transactionEntryRepository.save(transactionEntryDebit);
 
@@ -166,7 +166,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryCredit.setAccount(toAccount);
         transactionEntryCredit.setTransactionAmount(transferRequest.transactionAmount());
         transactionEntryCredit.setTransactionCurrency(transferRequest.currency());
-        transactionEntryCredit.setEntryType(LedgerDirection.CREDIT);
+        transactionEntryCredit.setLedgerDirection(LedgerDirection.CREDIT);
 
         transactionEntryRepository.save(transactionEntryCredit);
 

@@ -67,6 +67,5 @@ public class TransactionMapper {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
-
 }
 

@@ -19,7 +19,7 @@ public class Trade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tradeId;
+    private Long id;
 
     @Column(name = "account_id", nullable = false)
     private Long accountId;
@@ -62,7 +62,7 @@ public class Trade {
 
     public Trade() {}
     public Trade(
-            Long tradeId,
+            Long id,
             Long accountId,
             Long assetId,
             BigDecimal quantityTraded,
@@ -73,7 +73,7 @@ public class Trade {
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        this.tradeId = tradeId;
+        this.id = id;
         this.accountId = accountId;
         this.assetId = assetId;
         this.quantityTraded = quantityTraded;
@@ -86,8 +86,8 @@ public class Trade {
     }
 
 
-    public Long getTradeId() {
-        return tradeId;
+    public Long getId() {
+        return id;
     }
     public Long getAccountId() {
         return accountId;
@@ -116,10 +116,14 @@ public class Trade {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+    public List<TradeEntry> getTradeEntries() {
+        return tradeEntries;
+    }
+
 
 
     public void setTradeId(Long id) {
-        this.tradeId = tradeId;
+        this.id = id;
     }
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
@@ -153,7 +157,7 @@ public class Trade {
     @Override
     public String toString() {
         return "Trade{" +
-                "Trade ID =" + tradeId +
+                "Trade ID =" + id +
                 ", Account ID =" + accountId +
                 ", Asset ID =" + assetId +
                 ", Quantity Traded =" + quantityTraded +
