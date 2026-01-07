@@ -49,7 +49,7 @@ public class TransactionMapper {
                         transactionEntry.getAccount().getId(),
                         transactionEntry.getTransactionAmount(),
                         transactionEntry.getTransactionCurrency(),
-                        transactionEntry.getEntryType()
+                        transactionEntry.getLedgerDirection()
                 ))
                 .collect(Collectors.toList());
 

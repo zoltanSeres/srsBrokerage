@@ -1,7 +1,7 @@
 package com.example.srsBrokerage.model;
 
 import com.example.srsBrokerage.enums.AccountCurrency;
-import com.example.srsBrokerage.enums.EntryType;
+import com.example.srsBrokerage.enums.LedgerDirection;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,7 +35,7 @@ public class TransactionEntry {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "entry-type", nullable = false, length = 10)
-    private EntryType entryType;
+    private LedgerDirection ledgerDirection;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -49,7 +49,7 @@ public class TransactionEntry {
             Account account,
             BigDecimal transactionAmount,
             AccountCurrency transactionCurrency,
-            EntryType entryType,
+            LedgerDirection ledgerDirection,
             LocalDateTime createdAt
     ) {
         this.id = id;
@@ -57,7 +57,7 @@ public class TransactionEntry {
         this.account = account;
         this.transactionAmount = transactionAmount;
         this.transactionCurrency = transactionCurrency;
-        this.entryType = entryType;
+        this.ledgerDirection = ledgerDirection;
         this.createdAt = createdAt;
     }
 
@@ -82,8 +82,8 @@ public class TransactionEntry {
         return transactionCurrency;
     }
 
-    public EntryType getEntryType() {
-        return entryType;
+    public LedgerDirection getLedgerDirection() {
+        return ledgerDirection;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -110,8 +110,8 @@ public class TransactionEntry {
         this.transactionCurrency = transactionCurrency;
     }
 
-    public void setEntryType(EntryType entryType) {
-        this.entryType = entryType;
+    public void setLedgerDirection(LedgerDirection ledgerDirection) {
+        this.ledgerDirection = ledgerDirection;
     }
 
 

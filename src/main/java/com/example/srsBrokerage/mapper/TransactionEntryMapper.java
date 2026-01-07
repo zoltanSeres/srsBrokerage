@@ -4,7 +4,7 @@ import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
 import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
 import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionEntryResponse;
-import com.example.srsBrokerage.enums.EntryType;
+import com.example.srsBrokerage.enums.LedgerDirection;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.Transaction;
 import com.example.srsBrokerage.model.TransactionEntry;
@@ -28,7 +28,7 @@ public class TransactionEntryMapper {
         depositTransactionEntry.setTransactionAmount(depositRequest.transactionAmount());
         depositTransactionEntry.setTransactionCurrency(depositRequest.currency());
         depositTransactionEntry.setTransaction(transaction);
-        depositTransactionEntry.setEntryType(EntryType.CREDIT);
+        depositTransactionEntry.setLedgerDirection(LedgerDirection.CREDIT);
 
         return depositTransactionEntry;
     }
@@ -44,7 +44,7 @@ public class TransactionEntryMapper {
         withdrawalTransactionEntry.setTransactionAmount(withdrawalRequest.transactionAmount());
         withdrawalTransactionEntry.setTransactionCurrency(withdrawalRequest.currency());
         withdrawalTransactionEntry.setTransaction(transaction);
-        withdrawalTransactionEntry.setEntryType(EntryType.DEBIT);
+        withdrawalTransactionEntry.setLedgerDirection(LedgerDirection.DEBIT);
 
         return withdrawalTransactionEntry;
     }
@@ -60,14 +60,14 @@ public class TransactionEntryMapper {
         transferDebit.setAccount(fromAccount);
         transferDebit.setTransactionAmount(transferRequest.transactionAmount());
         transferDebit.setTransactionCurrency(transferRequest.currency());
-        transferDebit.setEntryType(EntryType.DEBIT);
+        transferDebit.setLedgerDirection(LedgerDirection.DEBIT);
 
         TransactionEntry transferCredit = new TransactionEntry();
 
         transferCredit.setAccount(toAccount);
         transferCredit.setTransactionAmount(transferRequest.transactionAmount());
         transferCredit.setTransactionCurrency(transferRequest.currency());
-        transferCredit.setEntryType(EntryType.CREDIT);
+        transferCredit.setLedgerDirection(LedgerDirection.CREDIT);
 
         return List.of(transferDebit, transferCredit);
     }
@@ -78,7 +78,7 @@ public class TransactionEntryMapper {
                 transactionEntry.getAccount().getId(),
                 transactionEntry.getTransactionAmount(),
                 transactionEntry.getTransactionCurrency(),
-                transactionEntry.getEntryType()
+                transactionEntry.getLedgerDirection()
         );
     }
 

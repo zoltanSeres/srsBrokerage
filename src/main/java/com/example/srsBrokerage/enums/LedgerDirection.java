@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.enums;
 
-public enum EntryType {
+public enum LedgerDirection {
     DEBIT,
     CREDIT
 }

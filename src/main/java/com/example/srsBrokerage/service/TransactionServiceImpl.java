@@ -4,7 +4,7 @@ import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
 import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
 import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
-import com.example.srsBrokerage.enums.EntryType;
+import com.example.srsBrokerage.enums.LedgerDirection;
 import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TransactionMapper;
@@ -69,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setAccount(account);
         transactionEntry.setTransactionAmount(depositRequest.transactionAmount());
         transactionEntry.setTransactionCurrency(depositRequest.currency());
-        transactionEntry.setEntryType(EntryType.CREDIT);
+        transactionEntry.setEntryType(LedgerDirection.CREDIT);
 
         transactionEntryRepository.save(transactionEntry);
 
@@ -108,7 +108,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setAccount(account);
         transactionEntry.setTransactionAmount(withdrawalRequest.transactionAmount());
         transactionEntry.setTransactionCurrency(withdrawalRequest.currency());
-        transactionEntry.setEntryType(EntryType.DEBIT);
+        transactionEntry.setEntryType(LedgerDirection.DEBIT);
 
         transactionEntryRepository.save(transactionEntry);
 
@@ -156,7 +156,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryDebit.setAccount(fromAccount);
         transactionEntryDebit.setTransactionAmount(transferRequest.transactionAmount());
         transactionEntryDebit.setTransactionCurrency(transferRequest.currency());
-        transactionEntryDebit.setEntryType(EntryType.DEBIT);
+        transactionEntryDebit.setEntryType(LedgerDirection.DEBIT);
 
         transactionEntryRepository.save(transactionEntryDebit);
 
@@ -166,7 +166,7 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryCredit.setAccount(toAccount);
         transactionEntryCredit.setTransactionAmount(transferRequest.transactionAmount());
         transactionEntryCredit.setTransactionCurrency(transferRequest.currency());
-        transactionEntryCredit.setEntryType(EntryType.CREDIT);
+        transactionEntryCredit.setEntryType(LedgerDirection.CREDIT);
 
         transactionEntryRepository.save(transactionEntryCredit);
 

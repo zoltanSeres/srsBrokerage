@@ -7,7 +7,7 @@ import com.example.srsBrokerage.dto.response.transaction.TransactionEntryRespons
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
 import com.example.srsBrokerage.enums.AccountCurrency;
 import com.example.srsBrokerage.enums.AccountType;
-import com.example.srsBrokerage.enums.EntryType;
+import com.example.srsBrokerage.enums.LedgerDirection;
 import com.example.srsBrokerage.enums.TransactionType;
 import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TransactionMapper;
@@ -17,7 +17,6 @@ import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.TransactionEntryRepository;
 import com.example.srsBrokerage.repository.TransactionRepository;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +82,7 @@ public class TransactionServiceTest {
                 1L,
                 new BigDecimal("300.00"),
                 AccountCurrency.USD,
-                EntryType.CREDIT
+                LedgerDirection.CREDIT
         );
 
         TransactionResponse response = new TransactionResponse(
@@ -136,7 +135,7 @@ public class TransactionServiceTest {
                 1L,
                 new BigDecimal("200.00"),
                 AccountCurrency.USD,
-                EntryType.DEBIT
+                LedgerDirection.DEBIT
         );
 
         TransactionResponse response = new TransactionResponse(
@@ -203,14 +202,14 @@ public class TransactionServiceTest {
                 1L,
                 new BigDecimal("200.00"),
                 AccountCurrency.USD,
-                EntryType.DEBIT
+                LedgerDirection.DEBIT
         );
 
         TransactionEntryResponse creditResponse = new TransactionEntryResponse(
                 2L,
                 new BigDecimal("200.00"),
                 AccountCurrency.USD,
-                EntryType.CREDIT
+                LedgerDirection.CREDIT
         );
 
         TransactionResponse response = new TransactionResponse(
