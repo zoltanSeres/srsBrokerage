@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 public class TradeServiceImpl implements TradeService {
@@ -214,5 +215,11 @@ public class TradeServiceImpl implements TradeService {
         return position;
     }
 
-
+    @Override
+    public List<TradeResponse> getTradesForAccount(Long accountId) {
+        List<Trade> trades = tradeRepository.findAllByTradeEntriesAccountId(accountId);
+        return trades.stream()
+                .map(tradeMapper::toDto)
+                .toList();
+    }
 }
