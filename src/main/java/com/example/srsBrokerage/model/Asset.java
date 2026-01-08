@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Currency;
+import java.util.Objects;
 
 @Entity
 @Table(name = "asset", schema = "assets")
@@ -15,20 +17,20 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "symbol", nullable = false, length = 20)
+    @Column(name = "symbol", nullable = false, length = 20, unique = true)
     private String assetSymbol;
 
     @Column(name = "name", nullable = false)
     private String assetName;
 
-    @Column(name = "currency", nullable = false, length = 3)
-    private String assetCurrency;
+    @Column(name = "currency", nullable = false)
+    private Currency currency;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "update_at", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
@@ -38,14 +40,14 @@ public class Asset {
             Long id,
             String assetSymbol,
             String assetName,
-            String assetCurrency,
+           Currency currency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.id = id;
         this.assetSymbol = assetSymbol;
         this.assetName = assetName;
-        this.assetCurrency = assetCurrency;
+        this.currency = currency;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -60,8 +62,8 @@ public class Asset {
     public String getAssetName() {
         return assetName;
     }
-    public String getAssetCurrency() {
-        return assetCurrency;
+    public Currency getCurrency() {
+        return currency;
     }
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -80,8 +82,8 @@ public class Asset {
     public void setAssetName(String assetName) {
         this.assetName = assetName;
     }
-    public void setAssetCurrency(String assetCurrency) {
-        this.assetCurrency = assetCurrency;
+    public void setAssetCurrency(Currency currency) {
+        this.currency = currency;
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -92,12 +94,27 @@ public class Asset {
 
 
     @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Asset)) return false;
+        Asset asset = (Asset) object;
+        return Objects.equals(assetSymbol, asset.assetSymbol);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(assetSymbol);
+    }
+
+
+    @Override
     public String toString() {
         return "Asset{" +
                 "Asset ID =" + id +
                 ", Asset Symbol ='" + assetSymbol + '\'' +
                 ", Asset Name ='" + assetName + '\'' +
-                ", Asset Currency ='" + assetCurrency + '\'' +
+                ", Currency ='" + currency + '\'' +
                 ", Created At =" + createdAt +
                 ", Updated At =" + updatedAt +
                 '}';

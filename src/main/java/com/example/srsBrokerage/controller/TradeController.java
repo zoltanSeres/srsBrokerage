@@ -2,7 +2,6 @@ package com.example.srsBrokerage.controller;
 
 import com.example.srsBrokerage.dto.request.trade.TradeRequest;
 import com.example.srsBrokerage.dto.response.trade.TradeResponse;
-import com.example.srsBrokerage.enums.TradeSide;
 import com.example.srsBrokerage.service.TradeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
