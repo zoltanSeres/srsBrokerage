@@ -114,9 +114,20 @@ public class TradeServiceImpl implements TradeService {
             position.setAccount(account);
             position.setAsset(asset);
             position.setHeldQuantity(position.getHeldQuantity().add(tradeRequest.quantityTraded()));
-            position.setAveragePrice(PositionCalculator.calculateAveragePrice(tradeRequest.quantityTraded(), assetPrice));
 
-            position.setHeldQuantity(position.getHeldQuantity().add(tradeRequest.quantityTraded()));
+            BigDecimal newAveragePrice;
+
+            if (position.getHeldQuantity().compareTo(BigDecimal.ZERO) == 0) {
+                newAveragePrice = TradeCalculationService.initialAveragePrice(trade.getTradePrice());
+            } else {
+                newAveragePrice = TradeCalculationService.weightedAveragePrice(
+                        position.getAveragePrice(),
+                        position.getHeldQuantity().subtract(tradeRequest.quantityTraded()), //get quantity before adding the new quantity
+                        trade.getTradePrice(),
+                        tradeRequest.quantityTraded()
+                );
+            }
+            position.setAveragePrice(newAveragePrice);
 
             positionRepository.save(position);
 
@@ -181,7 +192,8 @@ public class TradeServiceImpl implements TradeService {
             position.setAccount(account);
             position.setAsset(asset);
             position.setHeldQuantity(position.getHeldQuantity().subtract(tradeRequest.quantityTraded()));
-            position.setAveragePrice(PositionCalculator.calculateAveragePrice(tradeRequest.quantityTraded(), assetPrice));
+
+            // no setAveragePrice: average price does not change when selling
 
             positionRepository.save(position);
 
