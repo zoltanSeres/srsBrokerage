@@ -8,6 +8,8 @@ import com.example.srsBrokerage.mapper.AssetMapper;
 import com.example.srsBrokerage.model.Asset;
 import com.example.srsBrokerage.repository.AssetRepository;
 
+import java.util.Locale;
+
 public class AssetService {
     private final AssetRepository assetRepository;
     private final MarketDataClient marketDataClient;
@@ -24,11 +26,17 @@ public class AssetService {
     }
 
     public AssetResponse getAssetBySymbol(String assetSymbol) {
+        assetSymbol = formattedAssetSymbol(assetSymbol);
+
         Asset asset = assetRepository.findByAssetSymbol(assetSymbol)
                 .orElseThrow(() -> new AssetNotFoundException("Asset not found."));
 
         ExternalAssetResponse apiData = marketDataClient.getAssetData(assetSymbol);
 
         return assetMapper.toDto(asset, apiData);
+    }
+
+    private String formattedAssetSymbol(String assetSymbol) {
+        return assetSymbol.trim().toUpperCase(Locale.ROOT);
     }
 }

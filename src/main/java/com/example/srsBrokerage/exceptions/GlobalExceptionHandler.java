@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidWithdrawalAmountException.class)
     public ResponseEntity<ErrorResponse> handleInvalidWithdrawalAmountException(InvalidWithdrawalAmountException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONTINUE.value(), exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
@@ -71,8 +71,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AssetNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAssetNotFoundException(AssetNotFoundException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidTradeQuantityException.class)
@@ -83,8 +83,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PositionNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePositionNotFoundException(PositionNotFoundException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InsufficientHeldAssetsException.class)

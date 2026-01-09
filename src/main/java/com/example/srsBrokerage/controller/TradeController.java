@@ -26,7 +26,7 @@ public class TradeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(tradeResponse);
     }
 
-    @GetMapping("/account/{accountId}")
+    @GetMapping("/accounts/{accountId}")
     public ResponseEntity<List<TradeResponse>> getTradesForAccount(@PathVariable Long accountId) {
         List<TradeResponse> trades = tradeService.getTradesForAccount(accountId);
         return ResponseEntity.ok(trades);
