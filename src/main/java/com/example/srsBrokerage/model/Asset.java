@@ -40,7 +40,7 @@ public class Asset {
             Long id,
             String assetSymbol,
             String assetName,
-           Currency currency,
+            Currency currency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {

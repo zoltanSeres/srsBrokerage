@@ -13,10 +13,8 @@ public record CreateAccountRequest(
 
         @NotNull
         Long userId,
-
         @NotNull
         AccountType accountType,
-
         @NotNull
         @Positive
         BigDecimal accountBalance,

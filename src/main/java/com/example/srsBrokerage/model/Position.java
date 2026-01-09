@@ -22,9 +22,8 @@ public class Position {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @ManyToOne
-    @JoinColumn(name = "asset_id")
-    private Asset asset;
+    @Column(name = "asset_id", nullable = false)
+    private Long assetId;
 
     @Column(name = "quantity_held", nullable = false, precision = 19, scale = 6)
     @ColumnDefault("0.0000")
@@ -48,12 +47,14 @@ public class Position {
     public Position() {}
     public Position(
             Long id,
+            Long assetId,
             BigDecimal heldQuantity,
             BigDecimal averagePrice,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.id = id;
+        this.assetId = assetId;
         this.heldQuantity = heldQuantity;
         this.averagePrice = averagePrice;
         this.createdAt = createdAt;
@@ -67,8 +68,8 @@ public class Position {
     public Account getAccount() {
         return account;
     }
-    public Asset getAsset() {
-        return asset;
+    public Long getAssetId() {
+        return assetId;
     }
     public BigDecimal getHeldQuantity() {
         return heldQuantity;
@@ -90,8 +91,8 @@ public class Position {
     public void setAccount(Account account) {
         this.account = account;
     }
-    public void setAsset(Asset asset) {
-        this.asset = asset;
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
     }
 
     public void setHeldQuantity(BigDecimal heldQuantity) {
@@ -113,7 +114,7 @@ public class Position {
         return "Position{" +
                 "Position ID =" + id +
                 ", Account =" + account +
-                ", Asset =" + asset +
+                ", Asset =" + assetId +
                 ", Held Quantity =" + heldQuantity +
                 ", Average Price =" + averagePrice +
                 ", Created At =" + createdAt +
