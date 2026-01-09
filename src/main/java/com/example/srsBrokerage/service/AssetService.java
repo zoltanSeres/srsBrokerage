@@ -1,0 +1,34 @@
+package com.example.srsBrokerage.service;
+
+import com.example.srsBrokerage.dto.response.asset.AssetResponse;
+import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
+import com.example.srsBrokerage.exceptions.AssetNotFoundException;
+import com.example.srsBrokerage.external.MarketDataClient;
+import com.example.srsBrokerage.mapper.AssetMapper;
+import com.example.srsBrokerage.model.Asset;
+import com.example.srsBrokerage.repository.AssetRepository;
+
+public class AssetService {
+    private final AssetRepository assetRepository;
+    private final MarketDataClient marketDataClient;
+    private final AssetMapper assetMapper;
+
+    public AssetService(
+            AssetRepository assetRepository,
+            MarketDataClient marketDataClient,
+            AssetMapper assetMapper
+    ) {
+        this.assetRepository = assetRepository;
+        this.marketDataClient = marketDataClient;
+        this.assetMapper = assetMapper;
+    }
+
+    public AssetResponse getAssetBySymbol(String assetSymbol) {
+        Asset asset = assetRepository.findByAssetSymbol(assetSymbol)
+                .orElseThrow(() -> new AssetNotFoundException("Asset not found."));
+
+        ExternalAssetResponse apiData = marketDataClient.getAssetData(assetSymbol);
+
+        return assetMapper.toDto(asset, apiData);
+    }
+}
