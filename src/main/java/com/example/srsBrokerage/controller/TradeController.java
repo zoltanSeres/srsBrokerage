@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/trades")
+@RequestMapping("/api/v1/users/{userId}/accounts/{accountId}/trades")
 public class TradeController {
 
     private final TradeService tradeService;
@@ -20,13 +20,13 @@ public class TradeController {
         this.tradeService = tradeService;
     }
 
-    @PostMapping("/execute")
+    @PostMapping
     public ResponseEntity<TradeResponse> executeTrade(@Valid @RequestBody TradeRequest tradeRequest) {
         TradeResponse tradeResponse = tradeService.executeTrade(tradeRequest)   ;
         return ResponseEntity.status(HttpStatus.CREATED).body(tradeResponse);
     }
 
-    @GetMapping("/accounts/{accountId}")
+    @GetMapping
     public ResponseEntity<List<TradeResponse>> getTradesForAccount(@PathVariable Long accountId) {
         List<TradeResponse> trades = tradeService.getTradesForAccount(accountId);
         return ResponseEntity.ok(trades);

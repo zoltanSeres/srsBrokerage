@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -23,19 +23,19 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/deposit")
+    @PostMapping("/deposits")
     public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest depositRequest) {
         TransactionResponse transactionResponse = transactionService.deposit(depositRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);
     }
 
-    @PostMapping("/withdraw")
+    @PostMapping("/withdrawals")
     public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody WithdrawalRequest withdrawalRequest) {
         TransactionResponse transactionResponse = transactionService.withdraw(withdrawalRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);
     }
 
-    @PostMapping("/transfer")
+    @PostMapping("/transfers")
     public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest transferRequest) {
         TransactionResponse transactionResponse = transactionService.transfer(transferRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);

@@ -4,15 +4,12 @@ import com.example.srsBrokerage.dto.response.position.PositionResponse;
 import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.service.PositionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/positions")
+@RequestMapping("/api/v1/users/{userId}/accounts/{accountId}/positions")
 public class PositionController {
 
     private final PositionService positionService;
@@ -21,14 +18,17 @@ public class PositionController {
         this.positionService = positionService;
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping
     public ResponseEntity<List<PositionResponse>> getPositionsForAccount(@PathVariable Long accountId) {
         List<PositionResponse> positions = positionService.getPositionsForAccount(accountId);
         return ResponseEntity.ok(positions);
     }
 
-    @GetMapping("/{accountId}/{assetId")
-    public ResponseEntity<PositionResponse> getPosition(@PathVariable Long accountId, @PathVariable Long assetId) {
+    @GetMapping
+    public ResponseEntity<PositionResponse> getPosition(
+            @PathVariable Long accountId,
+            @RequestParam Long assetId
+    ) {
         PositionResponse positionResponse = positionService.getPosition(accountId, assetId);
         return ResponseEntity.ok(positionResponse);
     }

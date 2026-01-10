@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/v1/users/{userId}/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -26,20 +26,20 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponse);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{accountId}")
     public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
         AccountResponse accountResponse = accountService.findAccountById(id);
         return ResponseEntity.ok(accountResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountResponse>> findAllAccount() {
+    public ResponseEntity<List<AccountResponse>> findAllAccounts() {
         List<AccountResponse> accountResponses = accountService.findAllAccounts();
         return ResponseEntity.ok(accountResponses);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable Long id) {
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
         return ResponseEntity.noContent().build();
     }
