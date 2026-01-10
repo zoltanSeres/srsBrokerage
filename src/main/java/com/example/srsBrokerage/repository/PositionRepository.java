@@ -5,8 +5,11 @@ import com.example.srsBrokerage.model.Asset;
 import com.example.srsBrokerage.model.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PositionRepository extends JpaRepository<Position, Long> {
-    Optional<Position> findByAccountAndAsset(Account account, Asset asset);
+    Optional<Position> findByAccountAndAsset(Long accountId, Long assetId);
+
+    List<Position> findByAccountId(Long accountId);
 }
