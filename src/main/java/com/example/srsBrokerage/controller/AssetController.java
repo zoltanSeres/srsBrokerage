@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/assets")
 public class AssetController {
@@ -16,6 +18,12 @@ public class AssetController {
 
     public AssetController(AssetService assetService) {
         this.assetService = assetService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AssetResponse>> getAllAssets() {
+        List<AssetResponse> assetResponses = assetService.getAllAssets();
+        return ResponseEntity.ok(assetResponses);
     }
 
     @GetMapping("/{assetSymbol}")
