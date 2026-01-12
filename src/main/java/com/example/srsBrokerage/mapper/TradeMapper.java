@@ -15,7 +15,6 @@ public class TradeMapper {
     public Trade toEntity(TradeRequest tradeRequest) {
         Trade trade = new Trade();
 
-        trade.setQuantityTraded(tradeRequest.quantityTraded());
         trade.setTradeSide(tradeRequest.tradeSide());
 
         return trade;
@@ -36,12 +35,7 @@ public class TradeMapper {
                 .collect(Collectors.toList());
         return new TradeResponse(
                 trade.getId(),
-                trade.getAccountId(),
-                trade.getAssetId(),
-                trade.getQuantityTraded(),
-                trade.getTradePrice(),
                 trade.getTradeSide(),
-                trade.getTradingFee(),
                 entryResponses,
                 trade.getCreatedAt()
         );

@@ -177,7 +177,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public List<TransactionResponse> getTransactionsForAccount(Long accountId) {
         List<Transaction> transactions =
-                transactionRepository.findDistinctByEntries_Account_Id(accountId);
+                transactionRepository.findDistinctByTransactionEntries_Account_Id(accountId);
 
         return transactions.stream()
                 .map(transactionMapper::toDto)

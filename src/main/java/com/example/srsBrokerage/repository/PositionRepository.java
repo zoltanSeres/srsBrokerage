@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PositionRepository extends JpaRepository<Position, Long> {
-    Optional<Position> findByAccountAndAsset(Long accountId, Long assetId);
+    Optional<Position> findByAccountIdAndAssetId(Long accountId, Long assetId);
 
     List<Position> findByAccountId(Long accountId);
 }

@@ -26,19 +26,21 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponse);
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
         AccountResponse accountResponse = accountService.findAccountById(id);
         return ResponseEntity.ok(accountResponse);
     }
 
-    @GetMapping
+    @GetMapping("api/v1/accounts")
     public ResponseEntity<List<AccountResponse>> findAllAccounts() {
         List<AccountResponse> accountResponses = accountService.findAllAccounts();
         return ResponseEntity.ok(accountResponses);
     }
 
-    @DeleteMapping("/{accountId}")
+    //add list all accounts by users too.
+
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
         return ResponseEntity.noContent().build();

@@ -25,9 +25,7 @@ public class AssetMapper {
                 asset.getAssetName(),
                 asset.getAssetSymbol(),
                 assetResponse.assetPrice(),
-                asset.getCurrency(),
-                asset.getCreatedAt(),
-                asset.getUpdatedAt()
+                asset.getCurrency()
         );
     }
 

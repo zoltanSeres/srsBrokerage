@@ -54,7 +54,7 @@ public class TradeServiceImpl implements TradeService {
         Account account = accountRepository.findById(tradeRequest.accountId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found."));
 
-        Asset asset = assetRepository.findById(tradeRequest.assetId())
+        Asset asset = assetRepository.findByAssetSymbol(tradeRequest.assetSymbol())
                 .orElseThrow(() -> new AssetNotFoundException("Asset not found."));
 
         if (tradeRequest.quantityTraded().compareTo(BigDecimal.ZERO) <= 0) {
@@ -77,7 +77,6 @@ public class TradeServiceImpl implements TradeService {
 
             Trade trade = new Trade();
 
-            trade.setQuantityTraded(tradeRequest.quantityTraded());
             trade.setTradeSide(tradeRequest.tradeSide());
 
             tradeRepository.save(trade);
@@ -117,7 +116,7 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryRepository.save(tradeEntryFee);
 
             Position position = positionRepository
-                    .findByAccountAndAsset(account.getId(), asset.getId())
+                    .findByAccountIdAndAssetId(account.getId(), asset.getId())
                             .orElseGet(() -> createNewPosition(account, asset));
 
             position.setAccount(account);
@@ -127,12 +126,12 @@ public class TradeServiceImpl implements TradeService {
             BigDecimal newAveragePrice;
 
             if (position.getHeldQuantity().compareTo(BigDecimal.ZERO) == 0) {
-                newAveragePrice = TradeCalculationService.initialAveragePrice(trade.getTradePrice());
+                newAveragePrice = TradeCalculationService.initialAveragePrice(externalAssetResponse.assetPrice());
             } else {
                 newAveragePrice = TradeCalculationService.weightedAveragePrice(
                         position.getAveragePrice(),
                         position.getHeldQuantity().subtract(tradeRequest.quantityTraded()), //get quantity before adding the new quantity
-                        trade.getTradePrice(),
+                        externalAssetResponse.assetPrice(),
                         tradeRequest.quantityTraded()
                 );
             }
@@ -144,7 +143,7 @@ public class TradeServiceImpl implements TradeService {
 
         } else if (tradeRequest.tradeSide() == TradeSide.SELL) {
 
-            Position position = positionRepository.findByAccountAndAsset(account.getId(), asset.getId())
+            Position position = positionRepository.findByAccountIdAndAssetId(account.getId(), asset.getId())
                     .orElseThrow(() -> new PositionNotFoundException("Position does not exists."));
 
             if (position.getHeldQuantity().compareTo(tradeRequest.quantityTraded()) < 0) {
@@ -161,7 +160,6 @@ public class TradeServiceImpl implements TradeService {
 
             Trade trade = new Trade();
 
-            trade.setQuantityTraded(tradeRequest.quantityTraded());
             trade.setTradeSide(TradeSide.SELL);
 
             tradeRepository.save(trade);

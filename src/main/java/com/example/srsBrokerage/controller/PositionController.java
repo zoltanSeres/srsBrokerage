@@ -24,9 +24,11 @@ public class PositionController {
         return ResponseEntity.ok(positions);
     }
 
-    @GetMapping
+    @GetMapping("/{positionId}")
     public ResponseEntity<PositionResponse> getPosition(
+            @PathVariable Long userId,
             @PathVariable Long accountId,
+            @PathVariable Long positionId,
             @RequestParam Long assetId
     ) {
         PositionResponse positionResponse = positionService.getPosition(accountId, assetId);

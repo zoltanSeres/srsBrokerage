@@ -8,6 +8,7 @@ import com.example.srsBrokerage.exceptions.AssetDataFetchException;
 import com.example.srsBrokerage.exceptions.AssetDataNotFoundException;
 import com.example.srsBrokerage.exceptions.ExternalApiException;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -29,7 +30,6 @@ public class MarketDataClientImpl implements MarketDataClient {
     }
 
     @Override
-    @Cacheable(value = "assetPriceCache", key = "#assetSymbol", unless = "#result == null")
     public ExternalAssetResponse getAssetData(String assetSymbol) {
         try {
             ExternalApiResponse externalApiResponse = webClient.get()

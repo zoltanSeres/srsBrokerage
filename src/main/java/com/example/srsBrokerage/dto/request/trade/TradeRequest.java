@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 public record TradeRequest(
         @NotNull
         Long accountId,
-        @NotNull
-        Long assetId,
         @NotBlank
         String assetSymbol,
         @NotNull

@@ -70,8 +70,8 @@ public class UserService {
         if (!createUserRequest.lastName().matches("[A-Za-z]+")) {
             throw new IllegalArgumentException("Invalid characters");
         }
-        if (userRepository.existsByEmail(createUserRequest.email())) {
-            throw new UserAlreadyExistsException("User with email" + createUserRequest.email() + " is already used.");
+        if (userRepository.existsByEmailAndIdNot(createUserRequest.email(), userToUpdate.getId())) {
+            throw new UserAlreadyExistsException("User with email " + createUserRequest.email() + " is already used.");
         }
 
         userToUpdate.setFirstName(createUserRequest.firstName());

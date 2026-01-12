@@ -31,7 +31,7 @@ public class PositionService {
     }
 
     public PositionResponse getPosition(Long accountId, Long assetId) {
-        Position position = positionRepository.findByAccountAndAsset(accountId, assetId)
+        Position position = positionRepository.findByAccountIdAndAssetId(accountId, assetId)
                 .orElseThrow(() -> new PositionNotFoundException("Position not found."));
 
         return positionMapper.toDto(position);

@@ -10,8 +10,6 @@ public record AssetResponse(
         String assetName,
         String assetSymbol, // API
         BigDecimal assetPrice, // API
-        Currency currency,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        Currency currency
 ) {
 }

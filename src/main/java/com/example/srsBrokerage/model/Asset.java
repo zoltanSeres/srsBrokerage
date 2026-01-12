@@ -26,30 +26,18 @@ public class Asset {
     @Column(name = "currency", nullable = false)
     private Currency currency;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
 
     public Asset() {}
     public Asset(
             Long id,
             String assetSymbol,
             String assetName,
-            Currency currency,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            Currency currency
     ) {
         this.id = id;
         this.assetSymbol = assetSymbol;
         this.assetName = assetName;
-        this.currency = currency;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.currency = currency;;
     }
 
 
@@ -65,12 +53,6 @@ public class Asset {
     public Currency getCurrency() {
         return currency;
     }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 
 
     public void setId(Long id) {
@@ -84,12 +66,6 @@ public class Asset {
     }
     public void setAssetCurrency(Currency currency) {
         this.currency = currency;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
 
@@ -114,9 +90,6 @@ public class Asset {
                 "Asset ID =" + id +
                 ", Asset Symbol ='" + assetSymbol + '\'' +
                 ", Asset Name ='" + assetName + '\'' +
-                ", Currency ='" + currency + '\'' +
-                ", Created At =" + createdAt +
-                ", Updated At =" + updatedAt +
-                '}';
+                ", Currency ='" + currency + '}';
     }
 }
