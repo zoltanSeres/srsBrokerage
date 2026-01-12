@@ -3,15 +3,16 @@ package com.example.srsBrokerage.service;
 import com.example.srsBrokerage.dto.response.asset.AssetResponse;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.exceptions.AssetNotFoundException;
-import com.example.srsBrokerage.external.DummyMarketDataClient;
 import com.example.srsBrokerage.external.MarketDataClient;
 import com.example.srsBrokerage.mapper.AssetMapper;
 import com.example.srsBrokerage.model.Asset;
 import com.example.srsBrokerage.repository.AssetRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Locale;
 
+@Service
 public class AssetService {
     private final AssetRepository assetRepository;
     private final MarketDataClient marketDataClient;

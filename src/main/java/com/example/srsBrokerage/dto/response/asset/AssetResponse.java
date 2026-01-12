@@ -7,11 +7,10 @@ import java.time.LocalDateTime;
 import java.util.Currency;
 
 public record AssetResponse(
-        String assetSymbol,
         String assetName,
-        Currency currency,
+        String assetSymbol, // API
         BigDecimal assetPrice, // API
-        BigDecimal change24h, // API
+        Currency currency,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

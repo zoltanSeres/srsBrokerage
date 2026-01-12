@@ -22,11 +22,10 @@ public class AssetMapper {
     public AssetResponse toDto(Asset asset, ExternalAssetResponse assetResponse) {
 
         return new AssetResponse(
-                asset.getAssetSymbol(),
                 asset.getAssetName(),
-                asset.getCurrency(),
+                asset.getAssetSymbol(),
                 assetResponse.assetPrice(),
-                assetResponse.change24h(),
+                asset.getCurrency(),
                 asset.getCreatedAt(),
                 asset.getUpdatedAt()
         );
