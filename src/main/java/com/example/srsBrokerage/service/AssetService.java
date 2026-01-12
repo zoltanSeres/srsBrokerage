@@ -3,7 +3,7 @@ package com.example.srsBrokerage.service;
 import com.example.srsBrokerage.dto.response.asset.AssetResponse;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.exceptions.AssetNotFoundException;
-import com.example.srsBrokerage.external.MarketDataClient;
+import com.example.srsBrokerage.client.MarketDataClient;
 import com.example.srsBrokerage.mapper.AssetMapper;
 import com.example.srsBrokerage.model.Asset;
 import com.example.srsBrokerage.repository.AssetRepository;

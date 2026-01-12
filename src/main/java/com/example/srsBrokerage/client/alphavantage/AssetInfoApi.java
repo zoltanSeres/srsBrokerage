@@ -1,4 +1,4 @@
-package com.example.srsBrokerage.dto.api;
+package com.example.srsBrokerage.client.alphavantage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

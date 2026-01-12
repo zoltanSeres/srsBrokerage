@@ -1,6 +1,8 @@
 package com.example.srsBrokerage.service;
 
+import com.example.srsBrokerage.client.MarketDataClient;
 import com.example.srsBrokerage.dto.request.trade.TradeRequest;
+import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.dto.response.trade.TradeResponse;
 import com.example.srsBrokerage.enums.LedgerDirection;
 import com.example.srsBrokerage.enums.TradeEntryType;
@@ -24,6 +26,7 @@ public class TradeServiceImpl implements TradeService {
     private final AssetRepository assetRepository;
     private final PositionRepository positionRepository;
     private final TradeMapper tradeMapper;
+    private final MarketDataClient marketDataClient;
 
     public TradeServiceImpl(
             TradeRepository tradeRepository,
@@ -31,7 +34,9 @@ public class TradeServiceImpl implements TradeService {
             AccountRepository accountRepository,
             AssetRepository assetRepository,
             PositionRepository positionRepository,
-            TradeMapper tradeMapper
+            TradeMapper tradeMapper,
+            MarketDataClient marketDataClient
+
     ) {
         this.tradeRepository = tradeRepository;
         this.tradeEntryRepository = tradeEntryRepository;
@@ -39,6 +44,7 @@ public class TradeServiceImpl implements TradeService {
         this.assetRepository = assetRepository;
         this.positionRepository = positionRepository;
         this.tradeMapper = tradeMapper;
+        this.marketDataClient = marketDataClient;
     }
 
 
@@ -57,7 +63,9 @@ public class TradeServiceImpl implements TradeService {
 
         if (tradeRequest.tradeSide() == TradeSide.BUY) {
 
-            BigDecimal amountDebited = assetPrice.multiply(tradeRequest.quantityTraded());
+            ExternalAssetResponse externalAssetResponse = marketDataClient.getAssetData(tradeRequest.assetSymbol());
+
+            BigDecimal amountDebited = externalAssetResponse.assetPrice().multiply(tradeRequest.quantityTraded());
 
             if (account.getAccountBalance().compareTo(amountDebited) < 0) {
                 throw new InsufficientBalanceException("Insufficient funds.");
@@ -143,7 +151,9 @@ public class TradeServiceImpl implements TradeService {
                 throw new InsufficientHeldAssetsException("Insufficient assets.");
             }
 
-            BigDecimal amountCredited = assetPrice.multiply(tradeRequest.quantityTraded());
+            ExternalAssetResponse externalAssetResponse = marketDataClient.getAssetData(tradeRequest.assetSymbol());
+
+            BigDecimal amountCredited = externalAssetResponse.assetPrice().multiply(tradeRequest.quantityTraded());
 
             account.setAccountBalance(account.getAccountBalance().add(amountCredited));
 

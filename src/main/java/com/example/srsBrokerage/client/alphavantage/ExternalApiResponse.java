@@ -1,5 +1,6 @@
-package com.example.srsBrokerage.dto.api;
+package com.example.srsBrokerage.client.alphavantage;
 
+import com.example.srsBrokerage.client.alphavantage.AssetInfoApi;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record ExternalApiResponse(

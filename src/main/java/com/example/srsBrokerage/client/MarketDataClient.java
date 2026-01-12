@@ -1,4 +1,4 @@
-package com.example.srsBrokerage.external;
+package com.example.srsBrokerage.client;
 
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 

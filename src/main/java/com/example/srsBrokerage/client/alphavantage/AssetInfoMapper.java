@@ -1,7 +1,7 @@
-package com.example.srsBrokerage.mapper;
+package com.example.srsBrokerage.client.alphavantage;
 
-import com.example.srsBrokerage.dto.api.ExternalApiResponse;
-import com.example.srsBrokerage.dto.api.AssetInfoApi;
+import com.example.srsBrokerage.client.alphavantage.ExternalApiResponse;
+import com.example.srsBrokerage.client.alphavantage.AssetInfoApi;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import org.springframework.stereotype.Component;
 
