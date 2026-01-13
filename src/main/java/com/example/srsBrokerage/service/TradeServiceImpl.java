@@ -92,6 +92,8 @@ public class TradeServiceImpl implements TradeService {
 
             tradeEntryRepository.save(tradeEntryCash);
 
+            trade.setTradeEntries(List.of(tradeEntryCash));
+
             TradeEntry tradeEntryAsset = new TradeEntry();
 
             tradeEntryAsset.setTrade(trade);
@@ -102,6 +104,8 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryAsset.setLedgerDirection(LedgerDirection.CREDIT);
 
             tradeEntryRepository.save(tradeEntryAsset);
+
+            trade.setTradeEntries(List.of(tradeEntryAsset));
 
             TradeEntry tradeEntryFee = new TradeEntry();
 
@@ -114,6 +118,8 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
             tradeEntryRepository.save(tradeEntryFee);
+
+            trade.setTradeEntries(List.of(tradeEntryFee));
 
             Position position = positionRepository
                     .findByAccountIdAndAssetId(account.getId(), asset.getId())

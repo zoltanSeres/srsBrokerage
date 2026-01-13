@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.dto.response.account;
 
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ public record AccountResponse(
         Long userId,
         AccountType accountType,
         BigDecimal accountBalance,
-        AccountCurrency accountCurrency,
+        MoneyCurrency accountCurrency,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 

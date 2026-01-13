@@ -1,9 +1,8 @@
 package com.example.srsBrokerage.dto.request.asset;
 
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.Currency;
 
 public record AssetRequest(
         @NotBlank
@@ -11,6 +10,6 @@ public record AssetRequest(
         @NotBlank
         String assetName,
         @NotNull
-        Currency currency
+        MoneyCurrency assetCurrency
 ) {
 }

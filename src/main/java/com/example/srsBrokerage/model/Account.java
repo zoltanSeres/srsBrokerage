@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.model;
 
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import jakarta.persistence.*;
 
@@ -34,7 +34,7 @@ public class Account {
 
     @Column(name = "currency", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private AccountCurrency accountCurrency;
+    private MoneyCurrency accountCurrency;
 
     @OneToMany(mappedBy = "account")            // maybe add Cascade type PERSIST and ORDER BY DATE
     private List<TransactionEntry> transactionEntries;
@@ -71,7 +71,7 @@ public class Account {
             Long userId,
             AccountType accountType,
             BigDecimal accountBalance,
-            AccountCurrency accountCurrency,
+            MoneyCurrency accountCurrency,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -96,7 +96,7 @@ public class Account {
     public BigDecimal getAccountBalance() {
         return accountBalance;
     }
-    public AccountCurrency getAccountCurrency() {
+    public MoneyCurrency getAccountCurrency() {
         return accountCurrency;
     }
     public List<TransactionEntry> getTransactionEntries() {
@@ -121,7 +121,7 @@ public class Account {
         this.accountType = accountType;
     }
     public void setAccountBalance(BigDecimal accountBalance) {this.accountBalance = accountBalance;}
-    public void setAccountCurrency(AccountCurrency accountCurrency) {
+    public void setAccountCurrency(MoneyCurrency accountCurrency) {
         this.accountCurrency = accountCurrency;
     }
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -139,7 +139,7 @@ public class Account {
                 ", User ID =" + userId +
                 ", Account Type ='" + accountType + '\'' +
                 ", Account Balance =" + accountBalance +
-                ", Account Currency ='" + accountCurrency + '\'' +
+                ", Account MoneyCurrency ='" + accountCurrency + '\'' +
                 ", Transactions =" + transactionEntries +
                 ", Positions =" + positions +
                 ", Created At =" + createdAt +

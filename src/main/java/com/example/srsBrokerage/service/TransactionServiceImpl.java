@@ -73,6 +73,8 @@ public class TransactionServiceImpl implements TransactionService{
 
         transactionEntryRepository.save(transactionEntry);
 
+        transaction.setTransactionEntries(List.of(transactionEntry));
+
         return transactionMapper.toDto(transaction);
     }
 
@@ -111,6 +113,8 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntry.setLedgerDirection(LedgerDirection.DEBIT);
 
         transactionEntryRepository.save(transactionEntry);
+
+        transaction.setTransactionEntries(List.of(transactionEntry));
 
         return transactionMapper.toDto(transaction);
     }
@@ -160,6 +164,8 @@ public class TransactionServiceImpl implements TransactionService{
 
         transactionEntryRepository.save(transactionEntryDebit);
 
+        transaction.setTransactionEntries(List.of(transactionEntryDebit));
+
         TransactionEntry transactionEntryCredit = new TransactionEntry();
 
         transactionEntryCredit.setTransaction(transaction);
@@ -169,6 +175,8 @@ public class TransactionServiceImpl implements TransactionService{
         transactionEntryCredit.setLedgerDirection(LedgerDirection.CREDIT);
 
         transactionEntryRepository.save(transactionEntryCredit);
+
+        transaction.setTransactionEntries(List.of(transactionEntryCredit));
 
         return transactionMapper.toDto(transaction);
     }

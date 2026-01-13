@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.model;
 
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import com.example.srsBrokerage.enums.LedgerDirection;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -31,7 +31,7 @@ public class TransactionEntry {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "currency", nullable = false, length = 3)
-    private AccountCurrency transactionCurrency;
+    private MoneyCurrency transactionCurrency;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "entry-type", nullable = false, length = 10)
@@ -48,7 +48,7 @@ public class TransactionEntry {
             Transaction transaction,
             Account account,
             BigDecimal transactionAmount,
-            AccountCurrency transactionCurrency,
+            MoneyCurrency transactionCurrency,
             LedgerDirection ledgerDirection,
             LocalDateTime createdAt
     ) {
@@ -78,7 +78,7 @@ public class TransactionEntry {
         return transactionAmount;
     }
 
-    public AccountCurrency getTransactionCurrency() {
+    public MoneyCurrency getTransactionCurrency() {
         return transactionCurrency;
     }
 
@@ -106,7 +106,7 @@ public class TransactionEntry {
         this.transactionAmount = transactionAmount;
     }
 
-    public void setTransactionCurrency(AccountCurrency transactionCurrency) {
+    public void setTransactionCurrency(MoneyCurrency transactionCurrency) {
         this.transactionCurrency = transactionCurrency;
     }
 

@@ -4,7 +4,7 @@ package com.example.srsBrokerage.service;
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
 import com.example.srsBrokerage.enums.AccountType;
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import com.example.srsBrokerage.exceptions.AccountCannotBeClosedException;
 import com.example.srsBrokerage.mapper.AccountMapper;
 import com.example.srsBrokerage.model.Account;
@@ -52,7 +52,7 @@ public class AccountServiceTest {
                 1L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD
+                MoneyCurrency.USD
         );
 
         User testUser = new User("John", "Doe", "john@gmail.com", "123456789");
@@ -96,7 +96,7 @@ public class AccountServiceTest {
         assertNotNull(result);
         assertEquals(AccountType.CHECKING, result.accountType());
         assertEquals(createAccountRequest.accountBalance(), result.accountBalance());
-        assertEquals(AccountCurrency.USD, result.accountCurrency());
+        assertEquals(MoneyCurrency.USD, result.accountCurrency());
 
         verify(userRepository).findById(1L);
         verify(accountRepository).save(any(Account.class));
@@ -110,7 +110,7 @@ public class AccountServiceTest {
                 2L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -122,7 +122,7 @@ public class AccountServiceTest {
                         2L,
                         AccountType.CHECKING,
                         new BigDecimal("1000.00"),
-                        AccountCurrency.USD,
+                        MoneyCurrency.USD,
                         timeForTesting,
                         timeForTesting)
                 );
@@ -132,7 +132,7 @@ public class AccountServiceTest {
         assertNotNull(result);
         assertEquals(AccountType.CHECKING, result.accountType());
         assertEquals(new BigDecimal("1000.00"), result.accountBalance());
-        assertEquals(AccountCurrency.USD, result.accountCurrency());
+        assertEquals(MoneyCurrency.USD, result.accountCurrency());
 
         verify(accountRepository).findById(1L);
         verify(accountMapper).toDto(account);
@@ -148,7 +148,7 @@ public class AccountServiceTest {
                 2L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -158,7 +158,7 @@ public class AccountServiceTest {
                 3L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -168,7 +168,7 @@ public class AccountServiceTest {
                 9L,
                 AccountType.CHECKING,
                 new BigDecimal("800.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -184,7 +184,7 @@ public class AccountServiceTest {
                 2L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         ));
@@ -194,7 +194,7 @@ public class AccountServiceTest {
                 3L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         ));
@@ -204,7 +204,7 @@ public class AccountServiceTest {
                 9L,
                 AccountType.CHECKING,
                 new BigDecimal("800.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         ));
@@ -227,7 +227,7 @@ public class AccountServiceTest {
                 3L,
                 AccountType.CHECKING,
                 BigDecimal.ZERO,
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -248,7 +248,7 @@ public class AccountServiceTest {
                 3L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );

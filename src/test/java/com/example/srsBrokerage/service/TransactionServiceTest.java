@@ -5,7 +5,7 @@ import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
 import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
 import com.example.srsBrokerage.dto.response.transaction.TransactionEntryResponse;
 import com.example.srsBrokerage.dto.response.transaction.TransactionResponse;
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import com.example.srsBrokerage.enums.AccountType;
 import com.example.srsBrokerage.enums.LedgerDirection;
 import com.example.srsBrokerage.enums.TransactionType;
@@ -60,7 +60,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -71,7 +71,7 @@ public class TransactionServiceTest {
         DepositRequest request = new DepositRequest(
                 1L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Deposit"
         );
 
@@ -81,7 +81,7 @@ public class TransactionServiceTest {
         TransactionEntryResponse entryResponse = new TransactionEntryResponse(
                 1L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 LedgerDirection.CREDIT
         );
 
@@ -113,7 +113,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -124,7 +124,7 @@ public class TransactionServiceTest {
         WithdrawalRequest request = new WithdrawalRequest(
                 1L,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Withdraw"
         );
 
@@ -134,7 +134,7 @@ public class TransactionServiceTest {
         TransactionEntryResponse entryResponse = new TransactionEntryResponse(
                 1L,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 LedgerDirection.DEBIT
         );
 
@@ -166,7 +166,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -176,7 +176,7 @@ public class TransactionServiceTest {
                 8L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -191,7 +191,7 @@ public class TransactionServiceTest {
                 1L,
                 2L,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Transfer"
         );
 
@@ -201,14 +201,14 @@ public class TransactionServiceTest {
         TransactionEntryResponse debitResponse = new TransactionEntryResponse(
                 1L,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 LedgerDirection.DEBIT
         );
 
         TransactionEntryResponse creditResponse = new TransactionEntryResponse(
                 2L,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 LedgerDirection.CREDIT
         );
 
@@ -244,7 +244,7 @@ public class TransactionServiceTest {
         DepositRequest request = new DepositRequest(
                 1L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Deposit"
         );
 
@@ -264,7 +264,7 @@ public class TransactionServiceTest {
         WithdrawalRequest request = new WithdrawalRequest(
                 1L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Withdraw"
         );
 
@@ -285,7 +285,7 @@ public class TransactionServiceTest {
                 1L,
                 2L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Transfer"
         );
 
@@ -304,7 +304,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -318,7 +318,7 @@ public class TransactionServiceTest {
                 1L,
                 2L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Transfer"
         );
 
@@ -337,7 +337,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -348,14 +348,14 @@ public class TransactionServiceTest {
         DepositRequest zeroAmountRequest = new DepositRequest(
                 1L,
                 new BigDecimal("0.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Deposit"
         );
 
         DepositRequest negativeAmountRequest = new DepositRequest(
                 1L,
                 new BigDecimal("-100.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Deposit"
         );
 
@@ -377,7 +377,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -388,14 +388,14 @@ public class TransactionServiceTest {
         WithdrawalRequest zeroAmountRequest = new WithdrawalRequest(
                 1L,
                 new BigDecimal("0.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Withdraw"
         );
 
         WithdrawalRequest negativeAmountRequest = new WithdrawalRequest(
                 1L,
                 new BigDecimal("-200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Withdraw"
         );
 
@@ -418,7 +418,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("200.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -429,7 +429,7 @@ public class TransactionServiceTest {
         WithdrawalRequest request = new WithdrawalRequest(
                 1L,
                 new BigDecimal("300.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Withdraw"
         );
 
@@ -450,7 +450,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -460,7 +460,7 @@ public class TransactionServiceTest {
                 8L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -475,7 +475,7 @@ public class TransactionServiceTest {
                 1L,
                 2L,
                 new BigDecimal("2000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Transfer"
         );
 
@@ -495,7 +495,7 @@ public class TransactionServiceTest {
                 10L,
                 AccountType.CHECKING,
                 new BigDecimal("1000.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -505,7 +505,7 @@ public class TransactionServiceTest {
                 8L,
                 AccountType.CHECKING,
                 new BigDecimal("1500.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 timeForTesting,
                 timeForTesting
         );
@@ -517,7 +517,7 @@ public class TransactionServiceTest {
                 1L,
                 1L,
                 new BigDecimal("400.00"),
-                AccountCurrency.USD,
+                MoneyCurrency.USD,
                 "Transfer"
         );
 

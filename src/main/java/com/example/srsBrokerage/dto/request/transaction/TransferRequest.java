@@ -1,6 +1,6 @@
 package com.example.srsBrokerage.dto.request.transaction;
 
-import com.example.srsBrokerage.enums.AccountCurrency;
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -15,7 +15,7 @@ public record TransferRequest(
         @Positive
         BigDecimal transactionAmount,
         @NotNull
-        AccountCurrency currency,
+        MoneyCurrency currency,
         String transactionDescription
 ) {
 }

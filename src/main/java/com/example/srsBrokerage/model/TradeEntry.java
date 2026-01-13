@@ -29,6 +29,7 @@ public class TradeEntry {
     private Trade trade;
 
     @Column(name = "entry_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TradeEntryType tradeEntryType;
 
     @Column(name = "amount", nullable = false, precision = 19, scale = 6)
@@ -37,6 +38,7 @@ public class TradeEntry {
     private BigDecimal amount;
 
     @Column(name = "direction", nullable = false)
+    @Enumerated(EnumType.STRING)
     private LedgerDirection ledgerDirection;
 
     @CreationTimestamp

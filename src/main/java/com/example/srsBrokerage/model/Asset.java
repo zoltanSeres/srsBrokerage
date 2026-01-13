@@ -1,12 +1,8 @@
 package com.example.srsBrokerage.model;
 
+import com.example.srsBrokerage.enums.MoneyCurrency;
 import jakarta.persistence.*;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.Objects;
 
 @Entity
@@ -24,7 +20,8 @@ public class Asset {
     private String assetName;
 
     @Column(name = "currency", nullable = false)
-    private Currency currency;
+    @Enumerated(EnumType.STRING)
+    private MoneyCurrency assetCurrency;
 
 
     public Asset() {}
@@ -32,12 +29,12 @@ public class Asset {
             Long id,
             String assetSymbol,
             String assetName,
-            Currency currency
+            MoneyCurrency assetCurrency
     ) {
         this.id = id;
         this.assetSymbol = assetSymbol;
         this.assetName = assetName;
-        this.currency = currency;;
+        this.assetCurrency = assetCurrency;
     }
 
 
@@ -50,8 +47,8 @@ public class Asset {
     public String getAssetName() {
         return assetName;
     }
-    public Currency getCurrency() {
-        return currency;
+    public MoneyCurrency getAssetCurrency() {
+        return assetCurrency;
     }
 
 
@@ -64,8 +61,8 @@ public class Asset {
     public void setAssetName(String assetName) {
         this.assetName = assetName;
     }
-    public void setAssetCurrency(Currency currency) {
-        this.currency = currency;
+    public void setAssetCurrency(MoneyCurrency assetCurrency) {
+        this.assetCurrency = assetCurrency;
     }
 
 
@@ -90,6 +87,6 @@ public class Asset {
                 "Asset ID =" + id +
                 ", Asset Symbol ='" + assetSymbol + '\'' +
                 ", Asset Name ='" + assetName + '\'' +
-                ", Currency ='" + currency + '}';
+                ", MoneyCurrency ='" + assetCurrency + '}';
     }
 }

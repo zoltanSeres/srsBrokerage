@@ -14,7 +14,7 @@ public class AssetMapper {
 
         asset.setAssetSymbol(assetRequest.assetSymbol());
         asset.setAssetName(assetRequest.assetName());
-        asset.setAssetCurrency(assetRequest.currency());
+        asset.setAssetCurrency(assetRequest.assetCurrency());
 
         return asset;
     }
@@ -25,7 +25,7 @@ public class AssetMapper {
                 asset.getAssetName(),
                 asset.getAssetSymbol(),
                 assetResponse.assetPrice(),
-                asset.getCurrency()
+                asset.getAssetCurrency()
         );
     }
 

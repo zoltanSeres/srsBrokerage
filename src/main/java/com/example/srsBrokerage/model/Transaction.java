@@ -28,10 +28,6 @@ public class Transaction {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
     private List<TransactionEntry> transactionEntries = new ArrayList<>();
 
@@ -46,14 +42,12 @@ public class Transaction {
             Long id,
             TransactionType transactionType,
             String transactionDescription,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime createdAt
     ) {
         this.id = id;
         this.transactionType = transactionType;
         this.transactionDescription = transactionDescription;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
 
@@ -69,14 +63,9 @@ public class Transaction {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
     public List<TransactionEntry> getTransactionEntries() {
         return transactionEntries;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -87,6 +76,9 @@ public class Transaction {
     public void setTransactionDescription(String transactionDescription) {
         this.transactionDescription = transactionDescription;
     }
+    public void setTransactionEntries(List<TransactionEntry> transactionEntries) {
+        this.transactionEntries = transactionEntries;
+    }
 
 
     @Override
@@ -96,7 +88,7 @@ public class Transaction {
                 ", transactionType=" + transactionType +
                 ", transactionDescription='" + transactionDescription + '\'' +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                ", transactionEntries=" + transactionEntries +
                 '}';
     }
 }

@@ -22,6 +22,7 @@ public class Trade {
     private Long id;
 
     @Column(name = "side", nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
     private TradeSide tradeSide;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -57,8 +58,6 @@ public class Trade {
         return tradeEntries;
     }
 
-
-
     public void setTradeId(Long id) {
         this.id = id;
     }
@@ -68,14 +67,18 @@ public class Trade {
      public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
      }
+     public void  setTradeEntries(List<TradeEntry> tradeEntries) {
+        this.tradeEntries = tradeEntries;
+     }
 
 
     @Override
     public String toString() {
         return "Trade{" +
-                "Trade ID =" + id +
-                ", Trade Side ='" + tradeSide + '\'' +
-                ", Created At =" + createdAt +
+                "id=" + id +
+                ", tradeSide=" + tradeSide +
+                ", createdAt=" + createdAt +
+                ", tradeEntries=" + tradeEntries +
                 '}';
     }
 }
