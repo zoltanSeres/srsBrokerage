@@ -164,8 +164,6 @@ public class TransactionServiceImpl implements TransactionService{
 
         transactionEntryRepository.save(transactionEntryDebit);
 
-        transaction.setTransactionEntries(List.of(transactionEntryDebit));
-
         TransactionEntry transactionEntryCredit = new TransactionEntry();
 
         transactionEntryCredit.setTransaction(transaction);
@@ -176,7 +174,7 @@ public class TransactionServiceImpl implements TransactionService{
 
         transactionEntryRepository.save(transactionEntryCredit);
 
-        transaction.setTransactionEntries(List.of(transactionEntryCredit));
+        transaction.setTransactionEntries(List.of(transactionEntryDebit, transactionEntryCredit));
 
         return transactionMapper.toDto(transaction);
     }

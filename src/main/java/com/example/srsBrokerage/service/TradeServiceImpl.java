@@ -77,7 +77,7 @@ public class TradeServiceImpl implements TradeService {
 
             Trade trade = new Trade();
 
-            trade.setTradeSide(tradeRequest.tradeSide());
+            trade.setTradeSide(TradeSide.BUY);
 
             tradeRepository.save(trade);
 
@@ -92,7 +92,6 @@ public class TradeServiceImpl implements TradeService {
 
             tradeEntryRepository.save(tradeEntryCash);
 
-            trade.setTradeEntries(List.of(tradeEntryCash));
 
             TradeEntry tradeEntryAsset = new TradeEntry();
 
@@ -105,7 +104,6 @@ public class TradeServiceImpl implements TradeService {
 
             tradeEntryRepository.save(tradeEntryAsset);
 
-            trade.setTradeEntries(List.of(tradeEntryAsset));
 
             TradeEntry tradeEntryFee = new TradeEntry();
 
@@ -113,13 +111,13 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryFee.setAccountId(account.getId());
             tradeEntryFee.setAssetId(asset.getId());
             tradeEntryFee.setTradeEntryType(TradeEntryType.FEE);
-            tradeEntryFee.setAmount(amountDebited.multiply(BigDecimal.valueOf(0.005))
+            tradeEntryFee.setAmount(amountDebited.multiply(BigDecimal.valueOf(0.05))
                     .setScale(2, RoundingMode.HALF_UP));
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
             tradeEntryRepository.save(tradeEntryFee);
 
-            trade.setTradeEntries(List.of(tradeEntryFee));
+            trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
 
             Position position = positionRepository
                     .findByAccountIdAndAssetId(account.getId(), asset.getId())
@@ -198,11 +196,13 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryFee.setAccountId(account.getId());
             tradeEntryFee.setAssetId(asset.getId());
             tradeEntryFee.setTradeEntryType(TradeEntryType.FEE);
-            tradeEntryFee.setAmount(amountCredited.multiply(BigDecimal.valueOf(0.005))
+            tradeEntryFee.setAmount(amountCredited.multiply(BigDecimal.valueOf(0.05))
                     .setScale(2, RoundingMode.HALF_UP));
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
             tradeEntryRepository.save(tradeEntryFee);
+
+            trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
 
             position.setAccount(account);
             position.setAssetId(asset.getId());

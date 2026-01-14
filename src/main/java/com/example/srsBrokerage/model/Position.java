@@ -47,6 +47,7 @@ public class Position {
     public Position() {}
     public Position(
             Long id,
+            Account account,
             Long assetId,
             BigDecimal heldQuantity,
             BigDecimal averagePrice,
@@ -54,6 +55,7 @@ public class Position {
             LocalDateTime updatedAt
     ) {
         this.id = id;
+        this.account = account;
         this.assetId = assetId;
         this.heldQuantity = heldQuantity;
         this.averagePrice = averagePrice;
