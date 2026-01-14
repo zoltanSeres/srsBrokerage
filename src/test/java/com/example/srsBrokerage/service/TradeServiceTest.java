@@ -1,25 +1,34 @@
 package com.example.srsBrokerage.service;
 
+import com.example.srsBrokerage.client.MarketDataClient;
+import com.example.srsBrokerage.dto.request.trade.TradeRequest;
+import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.enums.TradeSide;
 import com.example.srsBrokerage.mapper.TradeMapper;
-import com.example.srsBrokerage.model.Account;
-import com.example.srsBrokerage.repository.AccountRepository;
-import com.example.srsBrokerage.repository.AssetRepository;
-import com.example.srsBrokerage.repository.PositionRepository;
-import com.example.srsBrokerage.repository.TradeRepository;
+import com.example.srsBrokerage.model.*;
+import com.example.srsBrokerage.repository.*;
+import com.example.srsBrokerage.testdata.TestData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TradeServiceTest {
 
     @Mock
     private TradeRepository tradeRepository;
+
+    @Mock
+    private TradeEntryRepository tradeEntryRepository;
 
     @Mock
     private AccountRepository accountRepository;
@@ -31,26 +40,50 @@ public class TradeServiceTest {
     private PositionRepository positionRepository;
 
     @Mock
-    private TradeService tradeService;
-
-    @Mock
     private TradeMapper tradeMapper;
 
-    LocalDateTime timeForTesting = LocalDateTime.now();
+    @Mock
+    private MarketDataClient marketDataClient;
 
-    //used only for testing
-
+    @InjectMocks
+    private TradeServiceImpl tradeService;
 
     @Test
     void executeTrade_shouldExecuteBuyTrade() {
 
-        Long accountId = 1L;
-        String assetSymbol = "KO";
-        BigDecimal quantityTraded = new BigDecimal("2");
-        TradeSide tradeSide = TradeSide.BUY;
-        BigDecimal assetPrice = new BigDecimal("50.00");
+        Account account = TestData.accountWithBalance("1000");
+        Asset asset = TestData.asset("KO");
+        Position position = TestData.position(account, asset.getId(), new BigDecimal("2"));
+        position.setAveragePrice(new BigDecimal("40"));
+        Trade trade = TestData.trade(TradeSide.BUY);
 
-        Account account = TestData.accoun
+        when(accountRepository.findById(1L)).
+                thenReturn(Optional.of(account));
+        when(assetRepository.findByAssetSymbol("KO")).
+                thenReturn(Optional.of(asset));
+        when(positionRepository.findByAccountIdAndAssetId(account.getId(), asset.getId())).
+                thenReturn(Optional.of(position));
+        when(tradeEntryRepository.save(any()))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        TradeRequest tradeRequest = new TradeRequest(
+                account.getId(),
+                asset.getAssetSymbol(),
+                new BigDecimal("2"),
+                TradeSide.BUY
+        );
+
+        when(marketDataClient.getAssetData("KO"))
+                .thenReturn(new ExternalAssetResponse("KO", new BigDecimal("70")));
+
+        tradeService.executeTrade(tradeRequest);
+
+        verify(tradeEntryRepository, times(3)).save(any());
+
+        assertEquals(new BigDecimal("4"), position.getHeldQuantity());
+        assertEquals(new BigDecimal("860"), account.getAccountBalance());
+
+        verify(tradeRepository).save(any(Trade.class));
+        verify(positionRepository).save(position);
     }
-
 }

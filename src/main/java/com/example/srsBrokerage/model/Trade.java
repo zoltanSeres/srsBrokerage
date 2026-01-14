@@ -78,7 +78,7 @@ public class Trade {
                 "id=" + id +
                 ", tradeSide=" + tradeSide +
                 ", createdAt=" + createdAt +
-                ", tradeEntries=" + tradeEntries +
+                ", tradeEntries=" + (tradeEntries != null ? tradeEntries.size() : 0) +
                 '}';
     }
 }
