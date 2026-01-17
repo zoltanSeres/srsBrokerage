@@ -4,9 +4,7 @@ import com.example.srsBrokerage.client.MarketDataClient;
 import com.example.srsBrokerage.dto.request.trade.TradeRequest;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.enums.TradeSide;
-import com.example.srsBrokerage.exceptions.AccountNotFoundException;
-import com.example.srsBrokerage.exceptions.AssetNotFoundException;
-import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
+import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TradeMapper;
 import com.example.srsBrokerage.model.*;
 import com.example.srsBrokerage.repository.*;
@@ -157,5 +155,64 @@ public class TradeServiceTest {
                 () -> tradeService.executeTrade(tradeRequest));
 
         verifyNoInteractions(tradeRepository, tradeEntryRepository, positionRepository);
+    }
+
+
+    @Test
+    void executeTrade_shouldThrowException_whenInvalidTradeQuantity() {
+
+        Account account = TestData.accountWithBalance("1100");
+        Asset asset = TestData.asset("KO");
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+        when(assetRepository.findByAssetSymbol("KO"))
+                .thenReturn(Optional.of(asset));
+
+        TradeRequest tradeRequest = new TradeRequest(
+                1L,
+                "KO",
+                new BigDecimal("0"),
+                TradeSide.BUY
+        );
+
+        assertThrows(InvalidTradeQuantityException.class,
+                () -> tradeService.executeTrade(tradeRequest));
+
+        verifyNoInteractions(
+                tradeRepository,
+                tradeEntryRepository,
+                positionRepository
+        );
+    }
+
+
+    @Test
+    void executeTrade_shouldThrowException_whenMarketDataUnavailable() {
+        Account account = TestData.accountWithBalance("500");
+        Asset asset = TestData.asset("KO");
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+        when(assetRepository.findByAssetSymbol("KO"))
+                .thenReturn(Optional.of(asset));
+        when(marketDataClient.getAssetData("KO"))
+                .thenThrow(new AssetDataFetchException("API down."));
+
+        TradeRequest tradeRequest = new TradeRequest(
+                1L,
+                "KO",
+                new BigDecimal("2"),
+                TradeSide.BUY
+        );
+
+        assertThrows(AssetDataFetchException.class,
+                () -> tradeService.executeTrade(tradeRequest));
+
+        verifyNoInteractions(
+                tradeRepository,
+                tradeEntryRepository,
+                positionRepository
+        );
     }
 }
