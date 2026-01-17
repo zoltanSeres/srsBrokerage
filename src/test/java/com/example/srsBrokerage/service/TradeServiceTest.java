@@ -4,6 +4,9 @@ import com.example.srsBrokerage.client.MarketDataClient;
 import com.example.srsBrokerage.dto.request.trade.TradeRequest;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.enums.TradeSide;
+import com.example.srsBrokerage.exceptions.AccountNotFoundException;
+import com.example.srsBrokerage.exceptions.AssetNotFoundException;
+import com.example.srsBrokerage.exceptions.InsufficientBalanceException;
 import com.example.srsBrokerage.mapper.TradeMapper;
 import com.example.srsBrokerage.model.*;
 import com.example.srsBrokerage.repository.*;
@@ -85,5 +88,74 @@ public class TradeServiceTest {
 
         verify(tradeRepository).save(any(Trade.class));
         verify(positionRepository).save(position);
+    }
+
+
+    @Test
+    void executeTrade_shouldThrowException_whenAccountNotFound() {
+        TradeRequest tradeRequest = new TradeRequest(
+                1L,
+                "KO",
+                new BigDecimal("1"),
+                TradeSide.BUY
+        );
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AccountNotFoundException.class,
+                () -> tradeService.executeTrade(tradeRequest));
+
+        verifyNoInteractions(tradeRepository, tradeEntryRepository, positionRepository);
+    }
+
+
+    @Test
+    void executeTrade_shouldThrowException_whenAssetNotFound() {
+        TradeRequest tradeRequest = new TradeRequest(
+                1L,
+                "KO",
+                new BigDecimal("1"),
+                TradeSide.BUY
+        );
+
+        Account account = TestData.accountWithBalance("1000");
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+
+        when(assetRepository.findByAssetSymbol("KO"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AssetNotFoundException.class,
+                () -> tradeService.executeTrade(tradeRequest));
+
+        verifyNoInteractions(tradeRepository, tradeEntryRepository, positionRepository);
+    }
+
+
+    @Test
+    void executeTrade_shouldThrowException_whenInsufficientFunds() {
+        Account account = TestData.accountWithBalance("22");
+        Asset asset = TestData.asset("KO");
+
+        when(accountRepository.findById(1L))
+                .thenReturn(Optional.of(account));
+        when(assetRepository.findByAssetSymbol("KO"))
+                .thenReturn(Optional.of(asset));
+        when(marketDataClient.getAssetData("KO"))
+                .thenReturn(new ExternalAssetResponse("KO", new BigDecimal("80")));
+
+        TradeRequest tradeRequest = new TradeRequest(
+                1L,
+                "KO",
+                new BigDecimal("10"),
+                TradeSide.BUY
+        );
+
+        assertThrows(InsufficientBalanceException.class,
+                () -> tradeService.executeTrade(tradeRequest));
+
+        verifyNoInteractions(tradeRepository, tradeEntryRepository, positionRepository);
     }
 }
