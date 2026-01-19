@@ -82,7 +82,7 @@ public class TradeServiceTest {
         verify(tradeEntryRepository, times(3)).save(any());
 
         assertEquals(new BigDecimal("4"), position.getHeldQuantity());
-        assertEquals(new BigDecimal("860"), account.getAccountBalance());
+        assertEquals(new BigDecimal("853.00"), account.getAccountBalance());
 
         verify(tradeRepository).save(any(Trade.class));
         verify(positionRepository).save(position);

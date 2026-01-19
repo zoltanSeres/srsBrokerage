@@ -14,13 +14,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/login").permitAll()
-                        .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/login", "/error", "/public/**").permitAll()
+                        .requestMatchers("/api/v1/users/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/api/v1/users")
+                        .failureUrl("/login?error"));
         return httpSecurity.build();
+
+        //later use a .loginPage("/login") when have an HTML login page and LoginController.
     }
 }

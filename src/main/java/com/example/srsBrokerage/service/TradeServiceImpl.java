@@ -115,6 +115,8 @@ public class TradeServiceImpl implements TradeService {
                     .setScale(2, RoundingMode.HALF_UP));
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
+            account.setAccountBalance(account.getAccountBalance().subtract(tradeEntryFee.getAmount()));
+
             tradeEntryRepository.save(tradeEntryFee);
 
             trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
@@ -201,6 +203,8 @@ public class TradeServiceImpl implements TradeService {
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
             tradeEntryRepository.save(tradeEntryFee);
+
+            account.setAccountBalance(account.getAccountBalance().subtract(tradeEntryFee.getAmount()));
 
             trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
 

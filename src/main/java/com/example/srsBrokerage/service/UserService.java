@@ -19,7 +19,7 @@ import java.util.Set;
 public class UserService {
     private UserRepository userRepository;
     private final UserMapper userMapper;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(
             UserRepository userRepository,
@@ -54,7 +54,7 @@ public class UserService {
         roles.add("ROLE_USER"); //default
         user.setRoles(roles);
 
-        user.isActive();
+        user.setActive(true);
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);

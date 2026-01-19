@@ -38,7 +38,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = false;
+    private boolean isActive;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
