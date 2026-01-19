@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "users")
@@ -38,6 +40,9 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = false;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles = new HashSet<>();
+
     public User() {}
     public User(
             Long id,
@@ -47,7 +52,8 @@ public class User {
             String passwordHash,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
-            boolean isActive
+            boolean isActive,
+            Set<String> roles
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -57,6 +63,7 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
+        this.roles = roles;
     }
 
     public User(
@@ -83,9 +90,10 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public String getPassword() {
+    public String getPasswordHash() {
         return passwordHash;
     }
+    public Set<String> getRoles() {return roles;}
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -112,6 +120,7 @@ public class User {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
+    public void setRoles(Set<String> roles) {this.roles = roles;}
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

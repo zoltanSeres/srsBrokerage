@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.service;
 
+import com.example.srsBrokerage.config.PasswordConfig;
 import com.example.srsBrokerage.dto.request.user.CreateUserRequest;
 import com.example.srsBrokerage.dto.response.user.UserResponse;
 import com.example.srsBrokerage.exceptions.UserAlreadyExistsException;
@@ -7,18 +8,27 @@ import com.example.srsBrokerage.exceptions.UserNotFoundException;
 import com.example.srsBrokerage.mapper.UserMapper;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
     private final UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(
+            UserRepository userRepository,
+            UserMapper userMapper,
+            PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse createUser(CreateUserRequest createUserRequest) {
@@ -35,7 +45,14 @@ public class UserService {
             throw new UserAlreadyExistsException("User with email" + createUserRequest.email() + " is already used.");
         }
 
+        String hashed = passwordEncoder.encode(createUserRequest.password());
+
         User user = userMapper.toEntity(createUserRequest);
+
+        user.setPasswordHash(hashed);
+        Set<String> roles = new HashSet<>();
+        roles.add("ROLE_USER"); //default
+        user.setRoles(roles);
 
         user.isActive();
 
