@@ -71,8 +71,6 @@ public class TradeServiceImpl implements TradeService {
                 throw new InsufficientBalanceException("Insufficient funds.");
             }
 
-            account.setAccountBalance(account.getAccountBalance().subtract(amountDebited));
-
             accountRepository.save(account);
 
             Trade trade = new Trade();
@@ -159,8 +157,6 @@ public class TradeServiceImpl implements TradeService {
             ExternalAssetResponse externalAssetResponse = marketDataClient.getAssetData(tradeRequest.assetSymbol());
 
             BigDecimal amountCredited = externalAssetResponse.assetPrice().multiply(tradeRequest.quantityTraded());
-
-            account.setAccountBalance(account.getAccountBalance().add(amountCredited));
 
             accountRepository.save(account);
 
