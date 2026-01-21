@@ -71,6 +71,8 @@ public class TradeServiceImpl implements TradeService {
                 throw new InsufficientBalanceException("Insufficient funds.");
             }
 
+            account.setAccountBalance(account.getAccountBalance().subtract(amountDebited));
+
             accountRepository.save(account);
 
             Trade trade = new Trade();
@@ -113,11 +115,13 @@ public class TradeServiceImpl implements TradeService {
                     .setScale(2, RoundingMode.HALF_UP));
             tradeEntryFee.setLedgerDirection(LedgerDirection.DEBIT);
 
-            account.setAccountBalance(account.getAccountBalance().subtract(tradeEntryFee.getAmount()));
-
             tradeEntryRepository.save(tradeEntryFee);
 
             trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
+
+            account.setAccountBalance(account.getAccountBalance().subtract(tradeEntryFee.getAmount()));
+
+            accountRepository.save(account);
 
             Position position = positionRepository
                     .findByAccountIdAndAssetId(account.getId(), asset.getId())
@@ -157,6 +161,8 @@ public class TradeServiceImpl implements TradeService {
             ExternalAssetResponse externalAssetResponse = marketDataClient.getAssetData(tradeRequest.assetSymbol());
 
             BigDecimal amountCredited = externalAssetResponse.assetPrice().multiply(tradeRequest.quantityTraded());
+
+            account.setAccountBalance(account.getAccountBalance().add(amountCredited));
 
             accountRepository.save(account);
 
@@ -200,9 +206,10 @@ public class TradeServiceImpl implements TradeService {
 
             tradeEntryRepository.save(tradeEntryFee);
 
-            account.setAccountBalance(account.getAccountBalance().subtract(tradeEntryFee.getAmount()));
-
             trade.setTradeEntries(List.of(tradeEntryCash, tradeEntryAsset, tradeEntryFee));
+
+            account.setAccountBalance(account.getAccountBalance().add(amountCredited).subtract(tradeEntryFee.getAmount()));
+            accountRepository.save(account);
 
             position.setAccount(account);
             position.setAssetId(asset.getId());
