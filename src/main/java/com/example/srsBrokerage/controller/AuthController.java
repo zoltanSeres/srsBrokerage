@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public class RegistrationController {
+public class AuthController {
     private final UserService userService;
 
-    public RegistrationController(UserService userService) {
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
@@ -24,11 +24,5 @@ public class RegistrationController {
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         UserResponse userResponse = userService.createUser(createUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<UserResponse> loginUser(@Valid @RequestBody LoginUserRequest loginUserRequest) {
-        UserResponse userResponse = userService.loginUser(loginUserRequest);
-        return ResponseEntity.ok(userResponse);
     }
 }

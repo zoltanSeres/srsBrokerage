@@ -93,7 +93,22 @@ public class UserService {
     }
 
 
-    public UserResponse updateUser(Long id, CreateUserRequest createUserRequest) {
+    public UserResponse updateUser(
+            Long id,
+            CreateUserRequest createUserRequest,
+            Authentication auth
+    ) {
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) auth.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !loggedUserId.equals(id)) {
+            throw new AccessForbiddenException("You cannot access this user.");
+        }
+
         User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + "not found."));
 
@@ -117,7 +132,19 @@ public class UserService {
     }
 
 
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, Authentication auth) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) auth.getPrincipal();
+
+        Long loggedUserid = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !loggedUserid.equals(id)) {
+            throw new AccessForbiddenException("You cannot access this user.");
+        }
+
         User userToDelete = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + "not found."));
         userRepository.delete(userToDelete);

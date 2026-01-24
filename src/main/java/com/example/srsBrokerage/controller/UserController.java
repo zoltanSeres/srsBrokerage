@@ -38,17 +38,18 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity deleteUser(@PathVariable Long id, Authentication auth) {
+        userService.deleteUser(id, auth);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
-            @Valid @RequestBody CreateUserRequest createUserRequest
+            @Valid @RequestBody CreateUserRequest createUserRequest,
+            Authentication auth
     ) {
-        UserResponse userResponse = userService.updateUser(id, createUserRequest);
-        return ResponseEntity.ok(userService.updateUser(id, createUserRequest));
+        UserResponse userResponse = userService.updateUser(id, createUserRequest, auth);
+        return ResponseEntity.ok(userService.updateUser(id, createUserRequest, auth));
     }
 }
