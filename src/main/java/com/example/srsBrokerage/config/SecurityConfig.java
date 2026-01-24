@@ -16,10 +16,9 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/error", "/public/**").permitAll()
-                        .requestMatchers("/api/v1/users/**").hasRole("USER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/login", "/error", "/auth/", "/public/**").permitAll()
+                        .requestMatchers("/api/v1/**").authenticated()
+                        .anyRequest().denyAll()
                 )
                 .formLogin(form -> form
                         .usernameParameter("email")

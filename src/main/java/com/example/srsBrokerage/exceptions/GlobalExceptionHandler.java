@@ -1,6 +1,7 @@
 package com.example.srsBrokerage.exceptions;
 
 import com.example.srsBrokerage.dto.response.ErrorResponse;
+import org.antlr.v4.runtime.atn.ErrorInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -112,5 +113,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
+    @ExceptionHandler(AccessForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleAccessForbiddenException (AccessForbiddenException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
 }

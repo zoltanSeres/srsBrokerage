@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +26,12 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findUserById(@PathVariable Long id) {
-        UserResponse userResponse = userService.findUserById(id);
+    public ResponseEntity<UserResponse> findUserById(@PathVariable Long id, Authentication auth) {
+        UserResponse userResponse = userService.findUserById(id, auth);
         return ResponseEntity.ok(userResponse);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserResponse>> findAllUsers() {
         return ResponseEntity.ok(userService.findAllUsers());

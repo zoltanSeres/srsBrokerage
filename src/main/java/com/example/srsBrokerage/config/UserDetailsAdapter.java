@@ -23,6 +23,10 @@ public class UserDetailsAdapter implements UserDetails {
                 .toList();
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPasswordHash();
