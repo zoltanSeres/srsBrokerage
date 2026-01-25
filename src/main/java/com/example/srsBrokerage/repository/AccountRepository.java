@@ -7,5 +7,5 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    boolean existsByUserIdAndAccountType(@NotNull Long aLong, @NotBlank AccountType accountType);
+    boolean existsByUserIdAndAccountType(Long userId, @NotBlank AccountType accountType);
 }

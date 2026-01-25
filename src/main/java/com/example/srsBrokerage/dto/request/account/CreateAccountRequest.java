@@ -10,12 +10,7 @@ import java.math.BigDecimal;
 public record CreateAccountRequest(
 
         @NotNull
-        Long userId,
-        @NotNull
         AccountType accountType,
-        @NotNull
-        @Positive
-        BigDecimal accountBalance,
         @NotNull
         MoneyCurrency accountCurrency
 

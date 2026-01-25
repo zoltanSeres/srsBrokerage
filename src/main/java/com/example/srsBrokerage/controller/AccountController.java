@@ -6,6 +6,7 @@ import com.example.srsBrokerage.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,11 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest) {
-        AccountResponse accountResponse = accountService.createAccount(createAccountRequest);
+    public ResponseEntity<AccountResponse> createAccount(
+            @Valid @RequestBody CreateAccountRequest createAccountRequest,
+            Authentication authentication
+    ) {
+        AccountResponse accountResponse = accountService.createAccount(createAccountRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponse);
     }
 

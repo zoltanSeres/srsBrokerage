@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.service;
 
+import com.example.srsBrokerage.config.UserDetailsAdapter;
 import com.example.srsBrokerage.dto.request.account.CreateAccountRequest;
 import com.example.srsBrokerage.dto.response.account.AccountResponse;
 import com.example.srsBrokerage.exceptions.*;
@@ -8,6 +9,8 @@ import com.example.srsBrokerage.model.Account;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.AccountRepository;
 import com.example.srsBrokerage.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,24 +30,31 @@ public class AccountService {
     }
 
 
-    public AccountResponse createAccount(CreateAccountRequest createAccountRequest) {
+    @Transactional
+    public AccountResponse createAccount(
+            CreateAccountRequest createAccountRequest,
+            Authentication authentication
+    ) {
 
-        User user = userRepository.findById(createAccountRequest.userId())
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        User user = userRepository.findById(loggedUserId)
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
 
         boolean exists = accountRepository.existsByUserIdAndAccountType(
-                createAccountRequest.userId(),
+                loggedUserId,
                 createAccountRequest.accountType()
         );
         if (exists) {
             throw new AccountTypeAlreadyExistsException("Only one account type allowed.");
         }
 
-        if (createAccountRequest.accountBalance().compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidDepositAmountException("Deposit amount cannot be negative.");
-        }
-
         Account account = accountMapper.toEntity(createAccountRequest);
+
+        account.setUserId(loggedUserId);
+        account.setAccountBalance(BigDecimal.ZERO);
+
         Account savedAccount = accountRepository.save(account);
 
         return accountMapper.toDto(savedAccount);
