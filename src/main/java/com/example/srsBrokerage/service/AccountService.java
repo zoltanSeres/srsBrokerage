@@ -23,7 +23,11 @@ public class AccountService {
     private AccountMapper accountMapper;
     private UserRepository userRepository;
 
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper, UserRepository userRepository) {
+    public AccountService(
+            AccountRepository accountRepository,
+            AccountMapper accountMapper,
+            UserRepository userRepository
+    ) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
         this.userRepository = userRepository;
@@ -61,7 +65,19 @@ public class AccountService {
     }
 
 
-    public AccountResponse findAccountById(Long id) {
+    public AccountResponse findAccountById(Long id, Authentication authentication) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !loggedUserId.equals(id)) {
+            throw new AccessForbiddenException("You cannot perform this search.");
+        }
+
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + id + " does not exist."));
 
@@ -77,7 +93,20 @@ public class AccountService {
     }
 
 
-    public void deleteAccount(Long id) {
+    @Transactional
+    public void deleteAccount(Long id, Authentication authentication) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !loggedUserId.equals(id)) {
+            throw new AccessForbiddenException("You cannot perform this search.");
+        }
+
         Account accountToDelete = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account with ID " + id + " does not exist."));
 

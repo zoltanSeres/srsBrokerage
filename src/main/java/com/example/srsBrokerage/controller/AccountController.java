@@ -6,13 +6,14 @@ import com.example.srsBrokerage.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/{userId}/accounts")
+@RequestMapping("/api/v1/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -31,23 +32,29 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long id) {
-        AccountResponse accountResponse = accountService.findAccountById(id);
+    public ResponseEntity<AccountResponse> findAccountById(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        AccountResponse accountResponse = accountService.findAccountById(id, authentication);
         return ResponseEntity.ok(accountResponse);
     }
 
-    @GetMapping("api/v1/accounts")
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteAccount(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        accountService.deleteAccount(id, authentication);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
     public ResponseEntity<List<AccountResponse>> findAllAccounts() {
         List<AccountResponse> accountResponses = accountService.findAllAccounts();
         return ResponseEntity.ok(accountResponses);
     }
 
     //add list all accounts by users too.
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteAccount(@PathVariable Long id) {
-        accountService.deleteAccount(id);
-        return ResponseEntity.noContent().build();
-    }
-
 }

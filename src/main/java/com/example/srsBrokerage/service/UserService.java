@@ -10,6 +10,7 @@ import com.example.srsBrokerage.exceptions.UserNotFoundException;
 import com.example.srsBrokerage.mapper.UserMapper;
 import com.example.srsBrokerage.model.User;
 import com.example.srsBrokerage.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -93,6 +94,7 @@ public class UserService {
     }
 
 
+    @Transactional
     public UserResponse updateUser(
             Long id,
             CreateUserRequest createUserRequest,
@@ -132,6 +134,7 @@ public class UserService {
     }
 
 
+    @Transactional
     public void deleteUser(Long id, Authentication auth) {
 
         UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) auth.getPrincipal();
