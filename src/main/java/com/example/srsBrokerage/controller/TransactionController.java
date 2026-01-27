@@ -8,13 +8,14 @@ import com.example.srsBrokerage.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/transactions")
+@RequestMapping("/api/v1/accounts/{accountId}")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -24,20 +25,29 @@ public class TransactionController {
     }
 
     @PostMapping("/deposits")
-    public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody DepositRequest depositRequest) {
-        TransactionResponse transactionResponse = transactionService.deposit(depositRequest);
+    public ResponseEntity<TransactionResponse> deposit(
+            @Valid @RequestBody DepositRequest depositRequest,
+            Authentication authentication
+    ) {
+        TransactionResponse transactionResponse = transactionService.deposit(depositRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);
     }
 
     @PostMapping("/withdrawals")
-    public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody WithdrawalRequest withdrawalRequest) {
-        TransactionResponse transactionResponse = transactionService.withdraw(withdrawalRequest);
+    public ResponseEntity<TransactionResponse> withdraw(
+            @Valid @RequestBody WithdrawalRequest withdrawalRequest,
+            Authentication authentication
+    ) {
+        TransactionResponse transactionResponse = transactionService.withdraw(withdrawalRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);
     }
 
     @PostMapping("/transfers")
-    public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest transferRequest) {
-        TransactionResponse transactionResponse = transactionService.transfer(transferRequest);
+    public ResponseEntity<TransactionResponse> transfer(
+            @Valid @RequestBody TransferRequest transferRequest,
+            Authentication authentication
+    ) {
+        TransactionResponse transactionResponse = transactionService.transfer(transferRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionResponse);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.srsBrokerage.service;
 
+import com.example.srsBrokerage.config.UserDetailsAdapter;
 import com.example.srsBrokerage.dto.request.transaction.DepositRequest;
 import com.example.srsBrokerage.dto.request.transaction.TransferRequest;
 import com.example.srsBrokerage.dto.request.transaction.WithdrawalRequest;
@@ -16,6 +17,7 @@ import com.example.srsBrokerage.repository.TransactionEntryRepository;
 import com.example.srsBrokerage.repository.TransactionRepository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -43,10 +45,21 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionResponse deposit(DepositRequest depositRequest) {
+    public TransactionResponse deposit(
+            DepositRequest depositRequest,
+            Authentication authentication
+    ) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
 
         Account account = accountRepository.findById(depositRequest.accountId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found."));
+
+        if (!loggedUserId.equals(account.getId())) {
+            throw new AccessForbiddenException("You can only deposit intro your own account.");
+        }
 
         if (depositRequest.transactionAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidDepositAmountException("Deposit must be positive.");
@@ -81,9 +94,20 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionResponse withdraw(WithdrawalRequest withdrawalRequest) {
+    public TransactionResponse withdraw(
+            WithdrawalRequest withdrawalRequest,
+            Authentication authentication
+    ) {
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
         Account account = accountRepository.findById(withdrawalRequest.accountId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found."));
+
+        if (!loggedUserId.equals(account.getId())) {
+            throw new AccessForbiddenException("Can only withdraw from own account.");
+        }
 
         if (withdrawalRequest.transactionAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidWithdrawalAmountException("Withdrawal must be positive.");
@@ -122,9 +146,20 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionResponse transfer(TransferRequest transferRequest) {
+    public TransactionResponse transfer(
+            TransferRequest transferRequest,
+            Authentication authentication
+    ) {
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
         Account fromAccount = accountRepository.findById(transferRequest.fromAccountId())
                 .orElseThrow(() -> new AccountNotFoundException("Source account not found."));
+
+        if (!loggedUserId.equals(fromAccount.getId())) {
+            throw new AccessForbiddenException("Can only transfer from your own account");
+        }
 
         Account toAccount = accountRepository.findById(transferRequest.toAccountId())
                 .orElseThrow(()-> new AccountNotFoundException("Destination account not found."));
@@ -181,7 +216,21 @@ public class TransactionServiceImpl implements TransactionService{
 
 
     @Override
-    public List<TransactionResponse> getTransactionsForAccount(Long accountId) {
+    public List<TransactionResponse> getTransactionsForAccount(
+            Long accountId,
+            Authentication authentication
+    ) {
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!loggedUserId.equals(accountId) && !isAdmin) {
+            throw new AccessForbiddenException("Can't perform this action.");
+        }
+
         List<Transaction> transactions =
                 transactionRepository.findDistinctByTransactionEntries_Account_Id(accountId);
 
