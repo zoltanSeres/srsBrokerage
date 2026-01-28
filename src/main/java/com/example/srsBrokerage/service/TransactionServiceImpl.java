@@ -228,7 +228,7 @@ public class TransactionServiceImpl implements TransactionService{
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!loggedUserId.equals(accountId) && !isAdmin) {
-            throw new AccessForbiddenException("Can't perform this action.");`11
+            throw new AccessForbiddenException("Can't perform this action.");
         }
 
         List<Transaction> transactions =

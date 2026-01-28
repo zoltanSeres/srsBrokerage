@@ -1,6 +1,7 @@
 package com.example.srsBrokerage.service;
 
 import com.example.srsBrokerage.client.MarketDataClient;
+import com.example.srsBrokerage.config.UserDetailsAdapter;
 import com.example.srsBrokerage.dto.request.trade.TradeRequest;
 import com.example.srsBrokerage.dto.response.asset.ExternalAssetResponse;
 import com.example.srsBrokerage.dto.response.trade.TradeResponse;
@@ -11,6 +12,7 @@ import com.example.srsBrokerage.exceptions.*;
 import com.example.srsBrokerage.mapper.TradeMapper;
 import com.example.srsBrokerage.model.*;
 import com.example.srsBrokerage.repository.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +52,21 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public TradeResponse executeTrade(TradeRequest tradeRequest) {
+    public TradeResponse executeTrade(
+            TradeRequest tradeRequest,
+            Authentication authentication
+    ) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
         Account account = accountRepository.findById(tradeRequest.accountId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found."));
+
+        if (!loggedUserId.equals(account.getId())) {
+            throw new AccessForbiddenException("Can trade only from your own account.");
+        }
 
         Asset asset = assetRepository.findByAssetSymbol(tradeRequest.assetSymbol())
                 .orElseThrow(() -> new AssetNotFoundException("Asset not found."));
