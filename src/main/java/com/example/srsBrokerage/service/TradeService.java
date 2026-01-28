@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TradeService {
     TradeResponse executeTrade(TradeRequest tradeRequest, Authentication authentication);
-    List<TradeResponse> getTradesForAccount(Long accountId);
+    List<TradeResponse> getTradesForAccount(Long accountId, Authentication authentication);
 }

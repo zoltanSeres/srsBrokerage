@@ -3,8 +3,6 @@ package com.example.srsBrokerage.service;
 import com.example.srsBrokerage.dto.response.position.PositionResponse;
 import com.example.srsBrokerage.exceptions.PositionNotFoundException;
 import com.example.srsBrokerage.mapper.PositionMapper;
-import com.example.srsBrokerage.model.Account;
-import com.example.srsBrokerage.model.Asset;
 import com.example.srsBrokerage.model.Position;
 import com.example.srsBrokerage.repository.PositionRepository;
 import org.springframework.stereotype.Service;

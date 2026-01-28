@@ -32,9 +32,11 @@ public class TradeController {
     }
 
     @GetMapping("/trades")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<TradeResponse>> getTradesForAccount(@PathVariable Long accountId) {
-        List<TradeResponse> trades = tradeService.getTradesForAccount(accountId);
+    public ResponseEntity<List<TradeResponse>> getTradesForAccount(
+            @PathVariable Long accountId,
+            Authentication authentication
+    ) {
+        List<TradeResponse> trades = tradeService.getTradesForAccount(accountId, authentication);
         return ResponseEntity.ok(trades);
     }
 }

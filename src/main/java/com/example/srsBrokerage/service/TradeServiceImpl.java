@@ -242,7 +242,22 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public List<TradeResponse> getTradesForAccount(Long accountId) {
+    public List<TradeResponse> getTradesForAccount(
+            Long accountId,
+            Authentication authentication
+    ) {
+
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) authentication.getPrincipal();
+
+        Long loggedUserId = userDetailsAdapter.getUserId();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !accountRepository.existsByIdAndUserId(accountId, loggedUserId)) {
+            throw new AccessForbiddenException("You're not allowed to do this operation.");
+        }
+
         List<Trade> trades = tradeRepository.findAllByTradeEntriesAccountId(accountId);
         return trades.stream()
                 .map(tradeMapper::toDto)

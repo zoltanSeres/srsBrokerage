@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByUserIdAndAccountType(Long userId, @NotBlank AccountType accountType);
+    boolean existsByIdAndUserId(Long accountId, Long userId);
 }
